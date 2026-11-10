@@ -21,7 +21,7 @@ npm run check      # TypeScript + Astro diagnostics
 npm run preview    # serve dist/ locally
 ```
 
-Node 22.12+ is required (`.nvmrc` pins 22).
+Node 22.23.4+ is required (Astro 7); `.nvmrc` and Netlify pin Node 24.
 
 ---
 
@@ -92,7 +92,7 @@ Set **`SITE_URL`** to the production domain in Netlify before launch — canonic
 
 ## Deploying to Netlify
 1. Push this repo to GitHub (`thefarmmedia/OzarkJunkRemovals`).
-2. Netlify → *Add new site → Import from Git* → pick the repo. Build settings come from `netlify.toml` (`npm run build`, publish `dist`, Node 22).
+2. Netlify → *Add new site → Import from Git* → pick the repo. Build settings come from `netlify.toml` (`npm run build`, publish `dist`, Node 24).
 3. Set environment variables (*Site configuration → Environment variables*): at minimum `SITE_URL`, then `PUBLIC_PHONE`, `PUBLIC_EMAIL` and tracking IDs as available.
 4. Deploy → check *Forms* shows `quote` and `garage-sale-pickup` → enable notifications.
 5. Submit a real test lead with a photo on the live URL and confirm it arrives with the attachment.
