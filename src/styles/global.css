@@ -187,6 +187,11 @@
     transition: background-position 0.9s var(--ease-out-quint);
   }
   .card-glow:hover::after { background-position: 0% 0; }
+  /* Touch screens have no hover: play the glow sweep once as the card scrolls in */
+  @media (hover: none) {
+    .card-glow.reveal.is-in::after { animation: glow-sweep 1.4s var(--ease-out-quint) calc(var(--d, 0ms) + 250ms) both; }
+  }
+  @keyframes glow-sweep { from { background-position: 100% 0; } to { background-position: 0% 0; } }
 
   /* Hazard tape stripe */
   .hazard {

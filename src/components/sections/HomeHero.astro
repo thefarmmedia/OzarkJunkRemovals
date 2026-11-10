@@ -45,8 +45,8 @@ import { site, telHref } from '@/config/site';
 
     <div class="relative z-10 mt-6 lg:mt-0 lg:pl-6">
       <!-- mobile/tablet: angled orange backdrop behind the illustration only -->
-      <div class="absolute -inset-x-8 -top-6 -bottom-10 -z-10 -skew-y-6 bg-gradient-to-br from-orange via-[#ff4d00] to-[#c43d00] lg:hidden" aria-hidden="true"></div>
-      <div class="absolute -inset-x-8 -top-8 h-1.5 -z-10 -skew-y-6 bg-blue shadow-[0_0_20px_rgb(0_191_255/0.7)] lg:hidden" aria-hidden="true"></div>
+      <div class="m-slab absolute -inset-x-8 -top-6 -bottom-10 -z-10 bg-gradient-to-br from-orange via-[#ff4d00] to-[#c43d00] lg:hidden" aria-hidden="true"></div>
+      <div class="m-stripe absolute -inset-x-8 -top-8 h-1.5 -z-10 bg-blue shadow-[0_0_20px_rgb(0_191_255/0.7)] lg:hidden" aria-hidden="true"></div>
       <HeroVisual />
     </div>
   </div>
@@ -56,6 +56,11 @@ import { site, telHref } from '@/config/site';
   .hero-slab { transform: skewX(-12deg); transform-origin: top; animation: slab-in 1.1s var(--ease-out-quint) both; }
   .hero-slab-dark { transform: skewX(-12deg); animation: slab-in 1.2s var(--ease-out-quint) 0.08s both; }
   .hero-stripe { transform: skewX(-12deg); animation: slab-in 1.2s var(--ease-out-quint) 0.15s both; }
+  /* Mobile/tablet hero: slab sweeps in from the right, stripe follows */
+  .m-slab { transform: skewY(-6deg); animation: m-slab-in 1s var(--ease-out-quint) 0.25s both; }
+  .m-stripe { transform: skewY(-6deg); transform-origin: right; animation: m-stripe-in 0.9s var(--ease-out-quint) 0.55s both; }
+  @keyframes m-slab-in { from { transform: translateX(105%) skewY(-6deg); } to { transform: skewY(-6deg); } }
+  @keyframes m-stripe-in { from { transform: skewY(-6deg) scaleX(0); } to { transform: skewY(-6deg) scaleX(1); } }
   .pulse::before { animation: pulse-ring 2.4s 2s infinite; }
   @media (prefers-reduced-motion: reduce) { .pulse::before { animation: none; } }
 </style>
