@@ -9,7 +9,8 @@ import Icon from '@/components/ui/Icon.astro';
 import LoadSizeSelector from './LoadSizeSelector.astro';
 import PhotoUploader from './PhotoUploader.astro';
 import { services } from '@/data/services';
-import { cities } from '@/data/cities';
+import { cities as allCities } from '@/data/cities';
+const cities = [...allCities].sort((a, b) => (a.primary ? -1 : b.primary ? 1 : a.name.localeCompare(b.name)));
 import { site, telHref } from '@/config/site';
 
 interface Props {

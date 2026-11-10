@@ -5,7 +5,7 @@
  */
 import SectionHeading from '@/components/ui/SectionHeading.astro';
 import Icon from '@/components/ui/Icon.astro';
-import { cities, cityPath } from '@/data/cities';
+import { cities as allCities, coreAreaCities as cities, cityPath, SERVICE_RADIUS_MILES } from '@/data/cities';
 
 interface Props { heading?: boolean }
 const { heading = true } = Astro.props;
@@ -46,7 +46,7 @@ const primary = cities.find((c) => c.primary)!;
           eyebrow="Service areas"
           title="Springfield & the surrounding Ozarks"
           highlight="Springfield"
-          intro="Based in Springfield and serving nearby communities across Greene and Christian Counties. Not sure if you're in range? Send a request and we'll let you know."
+          intro={`Based in Springfield and serving ${allCities.length} towns within ${SERVICE_RADIUS_MILES} miles — from Bolivar to Branson and Mount Vernon to Lebanon. Not sure if you're in range? Send a request and we'll let you know.`}
         />
       )
     }
@@ -109,7 +109,7 @@ const primary = cities.find((c) => c.primary)!;
             </li>
           ))}
         </ul>
-        <a href="/service-areas/" class="mt-5 inline-flex items-center gap-2 font-display font-bold uppercase tracking-wider text-blue hover:underline">All service areas <Icon name="arrow" size={18} /></a>
+        <a href="/service-areas/" class="mt-5 inline-flex items-center gap-2 font-display font-bold uppercase tracking-wider text-blue hover:underline">All {allCities.length} service areas <Icon name="arrow" size={18} /></a>
       </div>
     </div>
   </div>

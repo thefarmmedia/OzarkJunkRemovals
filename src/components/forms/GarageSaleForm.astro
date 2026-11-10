@@ -2,7 +2,8 @@
 /** Garage-sale leftover pickup request — Netlify Forms (name="garage-sale-pickup"). */
 import Icon from '@/components/ui/Icon.astro';
 import PhotoUploader from './PhotoUploader.astro';
-import { cities } from '@/data/cities';
+import { cities as allCities } from '@/data/cities';
+const cities = [...allCities].sort((a, b) => (a.primary ? -1 : b.primary ? 1 : a.name.localeCompare(b.name)));
 import { site, telHref } from '@/config/site';
 
 const p = 'gs';

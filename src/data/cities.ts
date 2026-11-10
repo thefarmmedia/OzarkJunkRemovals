@@ -10,6 +10,7 @@
  *  - Geography facts here should be double-checked by the owner (see docs/LAUNCH-CHECKLIST.md).
  */
 import type { FAQ } from './services';
+import { towns, coreCoords, SPRINGFIELD, milesBetween, compass, type RegionKey, type TownSeed } from './areas';
 
 export interface City {
   slug: string;
@@ -32,9 +33,18 @@ export interface City {
   areas?: string[];
   faqs: FAQ[];
   nearby: string[];
+  /** Filled in automatically below. */
+  region?: RegionKey;
+  lat?: number;
+  lon?: number;
+  distance?: number;
+  direction?: string;
+  /** One-line description for listings. */
+  tagline?: string;
 }
 
-export const cities: City[] = [
+/** The 8 hand-written core towns. */
+const coreCities: City[] = [
   {
     slug: 'springfield',
     name: 'Springfield',
@@ -365,6 +375,199 @@ export const cities: City[] = [
     nearby: ['springfield', 'willard', 'rogersville'],
   },
 ];
+
+/* ──────────────────────────────────────────────────────────────────────────
+ *  EXTENDED SERVICE AREA (60-mile radius) — generated pages
+ *  Each region has its own copy, tips, services and FAQs. Town pages combine
+ *  region content + town facts + real distance/direction + nearest towns.
+ * ────────────────────────────────────────────────────────────────────────── */
+
+interface RegionContent {
+  label: string;
+  blurb: string;
+  intros: string[];
+  more: string;
+  notes: { title: string; text: string }[];
+  featured: string[];
+  faqs: FAQ[];
+}
+
+export const regions: Record<Exclude<RegionKey, 'core'>, RegionContent> = {
+  lakes: {
+    label: 'Branson & the Lakes',
+    blurb: 'Table Rock Lake, Lake Taneycomo and the Branson area — homes, cabins, condos and nightly rentals.',
+    intros: [
+      'Lake-country properties in and around {town} work hard. Full-time homes, weekend cabins, condos and nightly rentals all collect worn-out furniture, old appliances and leftover project debris. We make the trip down from Springfield, carry it out and haul it away.',
+      "Whether it's a lake house that needs a reset, a rental between guests or a garage that's finally getting cleared, junk removal in {town} works just like it does in Springfield: tell us what needs to go, get a straightforward estimate, and our crew handles the lifting and hauling.",
+    ],
+    more: "Owners and property managers in the lake area often need furniture swaps and turnover cleanouts on a tight timeline. If you can't be on site, we can coordinate access with you and send photos when the job is done.",
+    notes: [
+      { title: 'Steep drives & tight lots', text: 'Many lake-area properties have steep driveways, stairs or narrow roads. Tell us about access when you request your estimate so we bring the right trailer.' },
+      { title: 'Rental turnovers', text: "Replacing furniture or mattresses in a nightly rental? Send photos and your checkout window and we'll plan around it." },
+    ],
+    featured: ['furniture-removal', 'estate-property-cleanouts', 'junk-removal', 'appliance-removal', 'commercial-junk-removal'],
+    faqs: [
+      { q: 'Do you serve rental properties in {town}?', a: "Yes. Owners and property managers can request furniture removal and turnover cleanouts, and we can coordinate access if you won't be on site." },
+      { q: 'How far ahead should I book in {town}?', a: "{town} is about {dist} miles from our Springfield base, so a few days' notice helps us plan the trip. Tell us your timing in the request and we'll be honest about availability." },
+    ],
+  },
+  christian: {
+    label: 'Christian County',
+    blurb: 'The fast-growing towns just south of Springfield — subdivisions, farmhouses and acreage.',
+    intros: [
+      '{town} is part of the fast-growing stretch of Christian County just south of Springfield — newer subdivisions, older farmhouses and plenty of acreage in between. Our crew handles the garage cleanouts, furniture swaps and outbuilding cleanups that come with all of it.',
+      "From move-in leftovers in a new subdivision to a shed that hasn't been cleared in years, junk removal in {town} is a short trip for our Springfield-based crew. We load it, haul it and leave the space clear.",
+    ],
+    more: "Building or remodeling? Our dump trailer is made for drywall, lumber, flooring and other renovation debris, so you don't need a roll-off sitting in the driveway for a week.",
+    notes: [
+      { title: 'New-build leftovers', text: "Packaging, scrap lumber and the previous owner's leftovers can all go in one load. Send a photo of the pile." },
+      { title: 'Acreage & outbuildings', text: 'Barns, sheds and shops collect years of equipment and scrap. Let us know how close the trailer can get.' },
+    ],
+    featured: ['garage-cleanouts', 'construction-debris-removal', 'junk-removal', 'furniture-removal', 'appliance-removal'],
+    faqs: [
+      { q: 'Is {town} in your regular service area?', a: 'Yes. {town} is about {dist} miles {dir} of Springfield — an easy run for our crew.' },
+      { q: 'Can you haul remodel debris in {town}?', a: 'Yes. Drywall, lumber, cabinets, flooring and fencing load straight into our dump trailer. Heavy materials like concrete or shingles are estimated separately because of weight, so mention them in your request.' },
+    ],
+  },
+  north: {
+    label: 'North of Springfield',
+    blurb: 'Northern Greene, Polk and Dallas Counties — small towns, farms and rural acreage.',
+    intros: [
+      'North of Springfield, towns like {town} mix in-town homes with farms and rural acreage. That usually means more than one area to clear — a house, a garage, a barn, a fence line. We can take it all in one planned visit or schedule multiple loads.',
+      '{town} homeowners and landowners call us for the jobs that are too big for a pickup truck: whole-house cleanouts, outbuildings, old appliances and scrap piles. Our crew brings the trailer and does the loading.',
+    ],
+    more: "Settling an estate or helping family downsize? We work at your pace, set aside papers and keepsakes we find, and haul away what isn't staying.",
+    notes: [
+      { title: 'Farm & outbuilding junk', text: 'Old equipment, scrap metal, fencing and lumber are welcome. Drain fuel and fluids and remove chemicals before the crew arrives.' },
+      { title: 'Rural access', text: 'Long drives, gates and soft ground matter for a loaded trailer. Mention them in your request so we can plan.' },
+    ],
+    featured: ['estate-property-cleanouts', 'garage-cleanouts', 'junk-removal', 'appliance-removal', 'furniture-removal'],
+    faqs: [
+      { q: 'Do you go out to rural properties near {town}?', a: 'Yes, as long as our trailer can safely reach the property. Tell us about gates, long drives or soft ground when you request your estimate.' },
+      { q: 'Can you clear a whole property around {town} in one trip?', a: "Often, yes. {town} is about {dist} miles from Springfield, so we plan bigger jobs to minimize trips. If it will take more than one load, we'll tell you upfront." },
+    ],
+  },
+  west: {
+    label: 'West of Springfield',
+    blurb: 'Lawrence, Barry, Dade and Cedar Counties — small towns along I-44, US-60 and beyond.',
+    intros: [
+      "{town} is one of the small towns west of Springfield where many homes come with basements, detached garages and outbuildings. When it's time to clear them out, we bring the crew and the trailer.",
+      "Junk removal in {town} doesn't have to mean renting a trailer and making three trips yourself. Tell us what needs to go, and our Springfield-based crew loads it and hauls it away.",
+    ],
+    more: 'We also help landlords and small businesses in {county} clear out rentals, storage rooms and shop spaces.',
+    notes: [
+      { title: 'Plan the trip', text: '{town} is about {dist} miles from our base. Send photos and list everything — house, garage and yard — so we can handle it in one visit when possible.' },
+      { title: 'Shop & storage cleanouts', text: 'Storage rooms, shops and small commercial spaces are welcome. Remove chemicals and drain any fuel first.' },
+    ],
+    featured: ['estate-property-cleanouts', 'junk-removal', 'garage-cleanouts', 'commercial-junk-removal', 'appliance-removal'],
+    faqs: [
+      { q: 'Do you really come out to {town}?', a: 'Yes. {town} is within our 60-mile service radius, about {dist} miles {dir} of Springfield. Request an estimate and tell us your timing.' },
+      { q: 'Can you clean out a rental or storage space in {town}?', a: "Yes. Landlords and businesses can request cleanouts of rentals, storage rooms and shop spaces. We can coordinate access if you can't be there." },
+    ],
+  },
+  east: {
+    label: 'East of Springfield',
+    blurb: 'Webster, Laclede, Wright and Douglas Counties — farms, acreage and small towns.',
+    intros: [
+      'East of Springfield, {town} and the surrounding countryside have plenty of farms, acreage and older homes. We handle the big cleanouts — houses, barns, sheds — and single bulky items too.',
+      'Need junk gone in {town}? Our crew comes out from Springfield, loads everything from wherever it sits and hauls it off — no trailer rental, no borrowed truck, no weekend lost.',
+    ],
+    more: "Downsizing a family farmhouse or clearing a property for sale? We'll work through it room by room and building by building, and set aside anything important we find.",
+    notes: [
+      { title: 'Bundle everything', text: 'Since {town} is about {dist} miles out, list every item and area in one request — house, garage, barn, yard — so we can plan a single trip when it fits.' },
+      { title: 'Scrap & equipment', text: 'Old mowers, tillers, fencing and scrap metal are welcome once fuel and fluids are drained.' },
+    ],
+    featured: ['estate-property-cleanouts', 'garage-cleanouts', 'junk-removal', 'appliance-removal', 'construction-debris-removal'],
+    faqs: [
+      { q: 'Is {town} too far for junk removal?', a: "No. {town} is about {dist} miles {dir} of Springfield, inside our 60-mile service area. A few days' notice helps us plan the trip." },
+      { q: 'Can you clean out a farmhouse or barn near {town}?', a: 'Yes. Whole-house and outbuilding cleanouts are a big part of what we do. Fuel, chemicals and pesticides must be removed separately.' },
+    ],
+  },
+};
+
+export const regionOrder: Exclude<RegionKey, 'core'>[] = ['christian', 'lakes', 'north', 'west', 'east'];
+
+const fill = (t: string, v: Record<string, string>) => t.replace(/\{(\w+)\}/g, (_, k) => v[k] ?? `{${k}}`);
+
+function buildTown(t: TownSeed, i: number): City {
+  const pos: [number, number] = [t.lat, t.lon];
+  const dist = Math.round(milesBetween(SPRINGFIELD, pos));
+  const dir = compass(SPRINGFIELD, pos);
+  const r = regions[t.region];
+  const v = { town: t.name, county: t.county, dist: String(dist), dir };
+  // Unique town description first, then region context.
+  const body = [t.about, fill(r.intros[i % r.intros.length], v), fill(r.more, v)];
+
+  const desc = `Junk removal in ${t.name}, MO — ${t.angle}. Our Springfield crew does the lifting and hauling. Free estimates.`;
+  return {
+    slug: t.slug,
+    name: t.name,
+    county: t.county,
+    zips: t.zips,
+    relation: `${dist} mi ${dir} of Springfield`,
+    status: 'expand',
+    seo: {
+      title: `Junk Removal ${t.name} MO | Ozark Junk Removals`,
+      description: desc.length <= 160 ? desc : `Junk removal in ${t.name}, MO — ${t.angle}. Free estimates from our Springfield crew.`,
+    },
+    h1: `Junk Removal in ${t.name}, MO`,
+    lead: `Serving ${t.name} and the rest of ${t.county}, about ${dist} miles ${dir} of Springfield. Tell us what needs to go — our crew does the lifting, loading and hauling.`,
+    body,
+    localNotes: r.notes.map((n) => ({ title: n.title, text: fill(n.text, v) })),
+    featuredServices: r.featured,
+    faqs: r.faqs.map((f) => ({ q: fill(f.q, v), a: fill(f.a, v) })),
+    nearby: [],
+    region: t.region,
+    tagline: t.angle.charAt(0).toUpperCase() + t.angle.slice(1),
+    lat: t.lat,
+    lon: t.lon,
+    distance: dist,
+    direction: dir,
+  };
+}
+
+const regionCounters: Record<string, number> = {};
+const generated = towns.map((t) => buildTown(t, (regionCounters[t.region] = (regionCounters[t.region] ?? -1) + 1)));
+
+const coreTaglines: Record<string, string> = {
+  springfield: 'Home base — every neighborhood and ZIP code',
+  nixa: 'Busy family neighborhoods and full garages',
+  ozark: 'Christian County seat with sheds, shops and acreage',
+  republic: 'Fast-growing neighborhoods and new construction',
+  battlefield: 'Residential streets right next to Springfield',
+  willard: 'In-town homes and acreage northwest of Springfield',
+  rogersville: 'Homes and outbuildings east on US-60',
+  strafford: 'Homes, shops and businesses along I-44',
+};
+
+for (const c of coreCities) {
+  c.tagline = coreTaglines[c.slug];
+  const [lat, lon] = coreCoords[c.slug];
+  Object.assign(c, {
+    region: 'core' as RegionKey,
+    lat,
+    lon,
+    distance: Math.round(milesBetween(SPRINGFIELD, [lat, lon])),
+    direction: c.primary ? '' : compass(SPRINGFIELD, [lat, lon]),
+  });
+}
+
+/** All service-area towns: core first, then extended towns by distance. */
+export const cities: City[] = [...coreCities, ...generated.sort((a, b) => a.distance! - b.distance!)];
+
+// Nearest neighbors for generated pages (core pages keep their hand-picked lists).
+for (const c of generated) {
+  c.nearby = cities
+    .filter((o) => o.slug !== c.slug)
+    .map((o) => ({ slug: o.slug, d: milesBetween([c.lat!, c.lon!], [o.lat!, o.lon!]) }))
+    .sort((a, b) => a.d - b.d)
+    .slice(0, 6)
+    .map((o) => o.slug);
+}
+
+/** The 8 core towns (used for menus, footer and the homepage map). */
+export const coreAreaCities = coreCities;
+export const SERVICE_RADIUS_MILES = 60;
 
 export const cityPath = (slug: string) => `/junk-removal-${slug}-mo/`;
 export const getCity = (slug: string) => cities.find((c) => c.slug === slug);

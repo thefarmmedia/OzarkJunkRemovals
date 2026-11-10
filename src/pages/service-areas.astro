@@ -1,56 +1,137 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import PageHero from '@/components/sections/PageHero.astro';
-import ServiceAreaMap from '@/components/sections/ServiceAreaMap.astro';
 import CtaBand from '@/components/ui/CtaBand.astro';
 import Icon from '@/components/ui/Icon.astro';
-import { cities, cityPath } from '@/data/cities';
+import { cities, coreAreaCities, regions, regionOrder, cityPath, SERVICE_RADIUS_MILES } from '@/data/cities';
+import { SPRINGFIELD } from '@/data/areas';
 
 const crumbs = [{ name: 'Service Areas', href: '/service-areas/' }];
+
+// To-scale map (equirectangular around Springfield).
+const S = 640, C = S / 2, R = 292;
+const pxPerMile = R / SERVICE_RADIUS_MILES;
+const cosLat = Math.cos((SPRINGFIELD[0] * Math.PI) / 180);
+const pt = (lat: number, lon: number) => ({
+  x: C + (lon - SPRINGFIELD[1]) * cosLat * 69.17 * pxPerMile,
+  y: C - (lat - SPRINGFIELD[0]) * 69.05 * pxPerMile,
+});
+const regionColor: Record<string, string> = {
+  core: '#FF5F00', christian: '#00BFFF', lakes: '#3DDBFF', north: '#8FE3FF', west: '#00BFFF', east: '#8FE3FF',
+};
+const labeled = new Set([
+  'branson', 'galena', 'forsyth', 'bolivar', 'buffalo', 'stockton', 'greenfield', 'mount-vernon',
+  'monett', 'cassville', 'aurora', 'marshfield', 'lebanon', 'mansfield', 'ava', 'hartville', 'nixa', 'willard',
+]);
+const groups = [
+  { key: 'core', label: 'Springfield & core area', blurb: 'Home base and the towns right around it — our most frequent stops.', list: coreAreaCities },
+  ...regionOrder.map((k) => ({ key: k, label: regions[k].label, blurb: regions[k].blurb, list: cities.filter((c) => c.region === k) })),
+];
 ---
 
 <BaseLayout
-  title="Service Areas: Springfield & SW Missouri | Ozark Junk Removals"
-  description="Junk removal in Springfield, MO and nearby Nixa, Ozark, Republic, Battlefield, Willard, Rogersville and Strafford. See ZIP codes and get a free estimate."
+  title="Service Areas: 60 Miles Around Springfield | Ozark Junk Removals"
+  description={`Junk removal in ${cities.length} towns within ${SERVICE_RADIUS_MILES} miles of Springfield, MO — Branson, Bolivar, Lebanon, Mount Vernon, Nixa, Ozark and more.`}
   crumbs={crumbs}
 >
   <PageHero
-    eyebrow="Where we work"
+    eyebrow={`${cities.length} towns · ${SERVICE_RADIUS_MILES}-mile radius`}
     title="Junk removal across Springfield & the Ozarks"
-    lead="Springfield is home base. We also serve the surrounding communities in Greene and Christian Counties. If your town isn't listed, send a request anyway — we'll tell you honestly whether we can get there."
+    lead={`Springfield is home base. We serve ${cities.length} communities within about ${SERVICE_RADIUS_MILES} miles — north to Bolivar and Stockton, south to Branson and Table Rock Lake, west to Monett and east to Lebanon. If your town isn't listed, send a request anyway and we'll tell you honestly whether we can get there.`}
     crumbs={crumbs}
   />
 
-  <ServiceAreaMap heading={false} />
-
-  <section class="bg-ink py-20 lg:py-24" aria-labelledby="zip-title">
-    <div class="container-x">
-      <h2 id="zip-title" class="display text-4xl sm:text-5xl">Communities &amp; ZIP codes</h2>
-      <div class="mt-10 overflow-x-auto">
-        <table class="w-full min-w-[34rem] border-collapse text-left">
-          <caption class="sr-only">Service area communities, counties and ZIP codes</caption>
-          <thead>
-            <tr class="border-b-2 border-orange font-display text-lg uppercase tracking-wider text-mute">
-              <th scope="col" class="py-3 pr-4">Community</th>
-              <th scope="col" class="py-3 pr-4">County</th>
-              <th scope="col" class="py-3 pr-4">ZIP codes</th>
-              <th scope="col" class="py-3"><span class="sr-only">Link</span></th>
-            </tr>
-          </thead>
-          <tbody>
-            {cities.map((c) => (
-              <tr class="border-b border-line">
-                <th scope="row" class="py-4 pr-4 font-display text-xl font-extrabold uppercase italic">{c.name}{c.primary && <span class="ml-2 bg-orange px-2 py-0.5 align-middle text-xs not-italic text-ink">Home base</span>}</th>
-                <td class="py-4 pr-4 text-mute">{c.county}</td>
-                <td class="py-4 pr-4 text-mute">{c.zips.join(', ')}</td>
-                <td class="py-4 text-right"><a href={cityPath(c.slug)} class="inline-flex items-center gap-1.5 font-semibold text-blue hover:underline">Junk removal in {c.name}<Icon name="arrow" size={16} /></a></td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+  <!-- Radius map -->
+  <section class="bg-charcoal py-16 lg:py-24" aria-labelledby="radius-title">
+    <div class="container-x grid items-center gap-10 lg:grid-cols-[1.1fr_1fr]">
+      <div class="reveal card border-blue/20 bg-ink p-2 sm:p-4">
+        <svg viewBox={`0 0 ${S} ${S}`} class="w-full" role="img" aria-labelledby="radius-desc">
+          <title id="radius-desc">Map of the {SERVICE_RADIUS_MILES}-mile service radius around Springfield, Missouri, with {cities.length} towns marked</title>
+          <defs>
+            <radialGradient id="rg"><stop offset="0" stop-color="#FF5F00" stop-opacity=".18" /><stop offset="1" stop-color="#FF5F00" stop-opacity="0" /></radialGradient>
+          </defs>
+          <circle cx={C} cy={C} r={R} fill="url(#rg)" />
+          {[20, 40, 60].map((m) => (
+            <>
+              <circle cx={C} cy={C} r={m * pxPerMile} fill="none" stroke="#00BFFF" stroke-opacity={m === 60 ? 0.6 : 0.18} stroke-width={m === 60 ? 2 : 1} stroke-dasharray={m === 60 ? '0' : '4 6'} />
+              <text x={C + 6} y={C + m * pxPerMile - 6} fill="#A7ADB7" font-size="13" font-family="Barlow Condensed, sans-serif" font-weight="700" letter-spacing="1">{m} MI</text>
+            </>
+          ))}
+          <path d={`M${C} ${C - R - 8}V${C + R + 8}M${C - R - 8} ${C}H${C + R + 8}`} stroke="#00BFFF" stroke-opacity=".08" />
+          {cities.filter((c) => !c.primary).map((c) => {
+            const p = pt(c.lat!, c.lon!);
+            const show = labeled.has(c.slug);
+            const left = p.x > C + 150;
+            return (
+              <a href={cityPath(c.slug)} class="rmap-pin">
+                <title>{c.name}, MO — {c.distance} mi {c.direction}</title>
+                <circle cx={p.x} cy={p.y} r={c.region === 'core' ? 6 : 4.5} fill="#0B0D10" stroke={regionColor[c.region!]} stroke-width="2.5" />
+                {show && (
+                  <text x={left ? p.x - 9 : p.x + 9} y={p.y + 4} text-anchor={left ? 'end' : 'start'} fill="#fff" font-size="14" font-family="Barlow Condensed, sans-serif" font-weight="700" letter-spacing=".5">{c.name.toUpperCase()}</text>
+                )}
+              </a>
+            );
+          })}
+          <a href={cityPath('springfield')} class="rmap-pin">
+            <title>Springfield, MO — home base</title>
+            <rect x={C - 9} y={C - 9} width="18" height="18" transform={`rotate(45 ${C} ${C})`} fill="#FF5F00" />
+            <text x={C + 16} y={C - 10} fill="#FF5F00" font-size="22" font-family="Barlow Condensed, sans-serif" font-weight="800" font-style="italic">SPRINGFIELD</text>
+          </a>
+        </svg>
+      </div>
+      <div class="reveal" style="--d:120ms">
+        <p class="eyebrow mb-4">Our radius</p>
+        <h2 id="radius-title" class="display text-4xl leading-[0.95] sm:text-5xl">{SERVICE_RADIUS_MILES} miles out from <span class="text-orange">Springfield</span></h2>
+        <p class="mt-5 text-lg text-mute">Closer towns are our most frequent stops. For towns farther out, a few days' notice helps us plan the trip — and listing everything you need gone in one request lets us handle it in a single visit when possible.</p>
+        <ul class="mt-7 grid grid-cols-2 gap-3">
+          {groups.map((g) => (
+            <li><a href={`#region-${g.key}`} class="card flex h-full items-center justify-between gap-2 p-4 transition hover:border-blue/60">
+              <span><span class="block font-display text-lg font-extrabold uppercase italic leading-tight">{g.label}</span><span class="text-xs text-mute">{g.list.length} towns</span></span>
+              <Icon name="arrow" size={16} class="shrink-0 rotate-90 text-blue" />
+            </a></li>
+          ))}
+        </ul>
       </div>
     </div>
   </section>
 
+  <!-- Regions -->
+  {
+    groups.map((g, gi) => (
+      <section id={`region-${g.key}`} class:list={['scroll-mt-28 py-16 lg:py-20', gi % 2 ? 'bg-charcoal' : 'bg-ink']} aria-labelledby={`rt-${g.key}`}>
+        <div class="container-x">
+          <div class="reveal flex flex-col justify-between gap-3 lg:flex-row lg:items-end">
+            <div>
+              <h2 id={`rt-${g.key}`} class="display text-4xl sm:text-5xl">{g.label}</h2>
+              <p class="mt-2 max-w-2xl text-mute">{g.blurb}</p>
+            </div>
+            <p class="font-display text-lg font-bold uppercase tracking-widest text-blue">{g.list.length} towns</p>
+          </div>
+          <ul class="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {g.list.map((c) => (
+              <li class="reveal">
+                <a href={cityPath(c.slug)} class:list={['card group flex h-full items-start justify-between gap-3 p-5 transition hover:border-blue/60', c.primary && 'border-orange/50']}>
+                  <span>
+                    <span class="block font-display text-xl font-extrabold uppercase italic leading-none">{c.name}</span>
+                    {c.tagline && <span class="mt-2 block text-sm leading-snug text-[#cfd3d9]">{c.tagline}</span>}
+                    <span class="mt-1.5 block text-xs text-mute">{c.county} · {c.primary ? 'Home base' : `${c.distance} mi ${c.direction}`}</span>
+                    <span class="mt-0.5 block text-xs text-mute">ZIP {c.zips.join(', ')}</span>
+                  </span>
+                  <Icon name="arrow" size={18} class="shrink-0 text-blue transition group-hover:translate-x-1" />
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    ))
+  }
+
   <CtaBand title="In our area? Let's clear it out." />
 </BaseLayout>
+
+<style>
+  .rmap-pin circle, .rmap-pin text { transition: fill 0.2s, stroke 0.2s; }
+  .rmap-pin:hover circle, .rmap-pin:focus-visible circle { fill: #00bfff; }
+  .rmap-pin:hover text, .rmap-pin:focus-visible text { fill: #00bfff; }
+</style>

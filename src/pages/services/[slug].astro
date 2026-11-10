@@ -9,7 +9,7 @@ import CtaBand from '@/components/ui/CtaBand.astro';
 import Icon from '@/components/ui/Icon.astro';
 import QuoteForm from '@/components/forms/QuoteForm.astro';
 import { services, getService, notAccepted, type Service } from '@/data/services';
-import { cities, cityPath } from '@/data/cities';
+import { cities, coreAreaCities, cityPath } from '@/data/cities';
 import { service as serviceSchema, faqPage } from '@/lib/schema';
 
 export function getStaticPaths() {
@@ -21,7 +21,7 @@ const { service: s } = Astro.props;
 const origin = Astro.site?.origin ?? Astro.url.origin;
 const path = `/services/${s.slug}/`;
 const related = s.related.map(getService).filter(Boolean) as Service[];
-const relatedCities = cities.filter((c) => c.featuredServices.includes(s.slug));
+const relatedCities = coreAreaCities;
 const crumbs = [
   { name: 'Services', href: '/services/' },
   { name: s.name, href: path },
@@ -126,7 +126,7 @@ const crumbs = [
           <h2 id="svc-areas" class="display text-2xl">{s.name} near you</h2>
           <p class="mt-2 text-sm text-mute">Based in Springfield and serving nearby communities.</p>
           <ul class="mt-5 space-y-1">
-            {(relatedCities.length ? relatedCities : cities).map((c) => (
+            {relatedCities.map((c) => (
               <li>
                 <a href={cityPath(c.slug)} class="group flex items-center justify-between border-b border-line py-2.5 hover:text-blue">
                   <span class="font-semibold">{s.name} in {c.name}, MO</span>
@@ -135,6 +135,7 @@ const crumbs = [
               </li>
             ))}
           </ul>
+          <a href="/service-areas/" class="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-blue hover:underline">See all {cities.length} towns we serve <Icon name="arrow" size={14} /></a>
         </div>
       </aside>
     </div>
