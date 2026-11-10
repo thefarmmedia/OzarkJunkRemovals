@@ -19,6 +19,25 @@ if (reduce || !('IntersectionObserver' in window)) {
   els.forEach((el) => io.observe(el));
 }
 
+// Start held animations once at least ~40% of the element is visible.
+const holds = document.querySelectorAll<HTMLElement>('[data-play-on-view]');
+if (reduce || !('IntersectionObserver' in window)) {
+  holds.forEach((el) => el.classList.add('play'));
+} else {
+  const playIo = new IntersectionObserver(
+    (entries) => {
+      for (const e of entries) {
+        if (e.isIntersecting) {
+          e.target.classList.add('play');
+          playIo.unobserve(e.target);
+        }
+      }
+    },
+    { threshold: 0.4 },
+  );
+  holds.forEach((el) => playIo.observe(el));
+}
+
 document.addEventListener('click', (e) => {
   const el = (e.target as HTMLElement).closest<HTMLElement>('[data-track]');
   if (!el) return;

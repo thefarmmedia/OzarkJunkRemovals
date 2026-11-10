@@ -292,6 +292,11 @@
   @keyframes marquee { to { transform: translateX(-50%); } }
 
   .animate-rise { animation: rise 0.9s var(--ease-out-quint) both; animation-delay: var(--d, 0ms); }
+
+  /* Hold animations inside [data-play-on-view] until it scrolls into view
+     (e.g. the hero illustration sits below the fold on phones). JS adds .play. */
+  html:not(.no-js) [data-play-on-view]:not(.play),
+  html:not(.no-js) [data-play-on-view]:not(.play) * { animation-play-state: paused !important; }
 }
 
 @media (prefers-reduced-motion: reduce) {
