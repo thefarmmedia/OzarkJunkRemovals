@@ -1,0 +1,61 @@
+---
+import Icon from '@/components/ui/Icon.astro';
+import HeroVisual from './HeroVisual.astro';
+import { site, telHref } from '@/config/site';
+---
+
+<section class="hero relative isolate overflow-hidden bg-ink pt-28 pb-16 sm:pt-32 lg:min-h-[min(100svh,960px)] lg:pt-36 lg:pb-24" aria-labelledby="hero-title">
+  <!-- backdrop -->
+  <div class="grid-bg absolute inset-0 -z-30" aria-hidden="true"></div>
+  <div class="absolute inset-0 -z-30 bg-[radial-gradient(ellipse_70%_60%_at_20%_10%,rgb(0_191_255/0.14),transparent_60%)]" aria-hidden="true"></div>
+  <div class="hero-slab absolute top-0 right-[-18%] -z-20 hidden h-full w-[62%] bg-gradient-to-br from-orange via-[#ff4d00] to-[#c43d00] lg:block" aria-hidden="true"></div>
+  <div class="hero-slab-dark absolute top-0 right-[-14%] -z-20 h-full w-[50%] bg-ink/85 max-lg:hidden" aria-hidden="true"></div>
+  <div class="hero-stripe absolute top-0 right-[calc(36%+0.5rem)] -z-10 h-full w-2.5 bg-blue shadow-[0_0_24px_rgb(0_191_255/0.7)] max-lg:hidden" aria-hidden="true"></div>
+  <div class="absolute inset-x-0 bottom-0 -z-10 h-32 bg-gradient-to-t from-ink to-transparent" aria-hidden="true"></div>
+
+  <div class="container-x grid items-center gap-10 lg:grid-cols-[1.08fr_1fr] lg:gap-6">
+    <div class="relative z-10">
+      <p class="eyebrow animate-rise">Junk removal · Springfield, MO</p>
+      <h1 id="hero-title" class="display mt-5 text-[3.6rem] leading-[0.84] xs:text-[4.2rem] sm:text-[5.6rem] lg:text-[6.4rem] xl:text-[7.4rem]">
+        <span class="animate-rise block" style="--d:80ms">Junk gone.</span>
+        <span class="animate-rise block text-orange [text-shadow:0_0_40px_rgb(255_95_0/0.35)]" style="--d:180ms">Problem</span>
+        <span class="animate-rise block text-orange [text-shadow:0_0_40px_rgb(255_95_0/0.35)]" style="--d:240ms">solved.</span>
+      </h1>
+      <p class="animate-rise mt-6 font-display text-2xl font-bold uppercase tracking-wide text-white sm:text-[1.7rem]" style="--d:320ms">
+        Springfield's Local Junk Removal <span class="text-blue">&amp;</span> Hauling Crew
+      </p>
+      <p class="animate-rise mt-4 max-w-xl text-lg text-[#cfd3d9]" style="--d:380ms">
+        Got junk taking up space? We handle the heavy lifting, loading, and hauling so you don't have to. From a single bulky item to a complete property cleanout, Ozark Junk Removals makes getting your space back simple.
+      </p>
+      <div class="animate-rise mt-9 flex flex-col gap-3 xs:flex-row xs:flex-wrap" style="--d:450ms">
+        <a href="/get-a-quote/" class="btn btn-primary btn-lg pulse" data-track="cta_click" data-cta="hero">
+          Get My Free Quote <Icon name="arrow" size={22} class="arrow" />
+        </a>
+        <a href="#services" class="btn btn-outline btn-lg" data-track="cta_click" data-cta="hero_secondary">See What We Haul</a>
+      </div>
+      {
+        telHref && (
+          <a href={telHref} class="animate-rise mt-6 inline-flex items-center gap-3 font-display text-xl font-bold tracking-wide hover:text-blue" style="--d:500ms" data-track="call_click" data-cta="hero">
+            <span class="grid size-10 place-items-center rounded-full bg-blue/15 text-blue"><Icon name="phone" size={20} /></span>
+            Or call {site.phone}
+          </a>
+        )
+      }
+    </div>
+
+    <div class="relative z-10 mt-6 lg:mt-0 lg:pl-6">
+      <!-- mobile/tablet: angled orange backdrop behind the illustration only -->
+      <div class="absolute -inset-x-8 -top-6 -bottom-10 -z-10 -skew-y-6 bg-gradient-to-br from-orange via-[#ff4d00] to-[#c43d00] lg:hidden" aria-hidden="true"></div>
+      <div class="absolute -inset-x-8 -top-8 h-1.5 -z-10 -skew-y-6 bg-blue shadow-[0_0_20px_rgb(0_191_255/0.7)] lg:hidden" aria-hidden="true"></div>
+      <HeroVisual />
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero-slab { transform: skewX(-12deg); transform-origin: top; animation: slab-in 1.1s var(--ease-out-quint) both; }
+  .hero-slab-dark { transform: skewX(-12deg); animation: slab-in 1.2s var(--ease-out-quint) 0.08s both; }
+  .hero-stripe { transform: skewX(-12deg); animation: slab-in 1.2s var(--ease-out-quint) 0.15s both; }
+  .pulse::before { animation: pulse-ring 2.4s 2s infinite; }
+  @media (prefers-reduced-motion: reduce) { .pulse::before { animation: none; } }
+</style>

@@ -1,0 +1,36 @@
+---
+import Icon from './Icon.astro';
+import type { FAQ } from '@/data/services';
+interface Props { faqs: FAQ[]; open?: number }
+const { faqs, open = 0 } = Astro.props;
+---
+
+<div class="faq divide-y divide-line border-y border-line">
+  {
+    faqs.map((f, i) => (
+      <details class="group reveal" open={i === open} style={`--d:${Math.min(i, 6) * 50}ms`}>
+        <summary class="flex cursor-pointer list-none items-start justify-between gap-6 py-5 text-left [&::-webkit-details-marker]:hidden">
+          <h3 class="font-display text-[1.4rem] font-bold uppercase leading-tight tracking-wide transition-colors group-open:text-blue group-hover:text-blue sm:text-[1.55rem]">{f.q}</h3>
+          <span class="mt-0.5 grid size-9 shrink-0 place-items-center border border-white/15 text-orange transition-transform duration-300 group-open:rotate-45 group-open:border-orange" aria-hidden="true">
+            <Icon name="plus" size={18} stroke={3} />
+          </span>
+        </summary>
+        <div class="pr-4 pb-6 text-[1.05rem] leading-relaxed text-[#cfd3d9] sm:pr-16">
+          <p>{f.a}</p>
+        </div>
+      </details>
+    ))
+  }
+</div>
+
+<style>
+  @supports (interpolate-size: allow-keywords) {
+    .faq { interpolate-size: allow-keywords; }
+    .faq details::details-content {
+      height: 0;
+      overflow: clip;
+      transition: height 0.35s var(--ease-out-quint), content-visibility 0.35s allow-discrete;
+    }
+    .faq details[open]::details-content { height: auto; }
+  }
+</style>

@@ -1,0 +1,30 @@
+---
+import Icon from '@/components/ui/Icon.astro';
+import type { IconName } from '@/components/ui/icons';
+
+const items: { icon: IconName; title: string; text: string }[] = [
+  { icon: 'lift', title: 'We Do the Heavy Lifting', text: 'Our crew carries it out — you just point.' },
+  { icon: 'homeBiz', title: 'Residential & Commercial', text: 'Homes, rentals, offices and job sites.' },
+  { icon: 'clipboard', title: 'Straightforward Estimates', text: 'Clear estimate before anything is loaded.' },
+  { icon: 'local', title: 'Locally Operated', text: 'Based in the Springfield area.' },
+];
+---
+
+<section aria-label="Why choose Ozark Junk Removals" class="relative z-10 border-y border-line bg-charcoal">
+  <div class="hazard h-1.5 opacity-80" aria-hidden="true"></div>
+  <ul class="container-x grid grid-cols-1 divide-line xs:grid-cols-2 lg:grid-cols-4 lg:divide-x">
+    {
+      items.map((it, i) => (
+        <li class="reveal flex items-center gap-4 py-6 lg:px-7 lg:first:pl-0" style={`--d:${i * 80}ms`}>
+          <span class="grid size-12 shrink-0 place-items-center bg-ink text-blue ring-1 ring-blue/30" style="clip-path: polygon(0 0, 75% 0, 100% 25%, 100% 100%, 0 100%)">
+            <Icon name={it.icon} size={24} />
+          </span>
+          <span>
+            <span class="block font-display text-[1.25rem] font-extrabold uppercase italic leading-tight">{it.title}</span>
+            <span class="block text-[0.95rem] text-mute">{it.text}</span>
+          </span>
+        </li>
+      ))
+    }
+  </ul>
+</section>

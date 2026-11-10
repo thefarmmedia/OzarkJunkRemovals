@@ -1,0 +1,215 @@
+---
+import { Image } from 'astro:assets';
+import logo from '@/assets/brand/logo.png';
+import Icon from '@/components/ui/Icon.astro';
+import { nav, site, telHref } from '@/config/site';
+import { services } from '@/data/services';
+import { cities, cityPath } from '@/data/cities';
+
+const path = Astro.url.pathname;
+const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWith(href));
+const desktopNav = nav.filter((n) => n.href !== '/get-a-quote/');
+const dropdowns: Record<string, { label: string; href: string }[]> = {
+  '/services/': services.map((s) => ({ label: s.name, href: `/services/${s.slug}/` })),
+  '/service-areas/': cities.map((c) => ({ label: `${c.name}, MO`, href: cityPath(c.slug) })),
+};
+---
+
+<header id="site-header" class="fixed inset-x-0 top-0 z-50 transition-[background,box-shadow,backdrop-filter] duration-300" data-scrolled="false">
+  <div class="hazard h-1 w-full opacity-90" aria-hidden="true"></div>
+  <div class="container-x flex h-[4.5rem] items-center justify-between gap-4 lg:h-20">
+    <a href="/" class="relative z-10 flex shrink-0 items-center" aria-label={`${site.name} — home`}>
+      <Image
+        src={logo}
+        alt={site.name}
+        width={150}
+        height={75}
+        widths={[120, 150, 300]}
+        sizes="(min-width: 1024px) 150px, 120px"
+        loading="eager"
+        fetchpriority="high"
+        class="h-[3.4rem] w-auto lg:h-[4.1rem]"
+      />
+    </a>
+
+    <nav aria-label="Main" class="hidden lg:block">
+      <ul class="flex items-center gap-1">
+        {
+          desktopNav.map((item) => {
+            const sub = dropdowns[item.href];
+            return (
+              <li class="group relative">
+                <a
+                  href={item.href}
+                  class:list={[
+                    'relative flex items-center gap-1 px-3 py-2 font-display text-[1.08rem] font-bold uppercase tracking-wider transition-colors hover:text-blue',
+                    isActive(item.href) ? 'text-blue' : 'text-white/90',
+                  ]}
+                  aria-current={isActive(item.href) ? 'page' : undefined}
+                >
+                  {item.label}
+                  {sub && <Icon name="chevron" size={14} stroke={3} class="transition-transform group-hover:rotate-180 group-focus-within:rotate-180" />}
+                  <span
+                    class:list={[
+                      'absolute inset-x-3 -bottom-0.5 h-[3px] origin-left -skew-x-[30deg] bg-orange transition-transform duration-300',
+                      isActive(item.href) ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100',
+                    ]}
+                    aria-hidden="true"
+                  />
+                </a>
+                {sub && (
+                  <div class="invisible absolute top-full left-1/2 w-[34rem] -translate-x-1/2 translate-y-2 pt-3 opacity-0 transition-all duration-200 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100">
+                    <ul class="card grid grid-cols-2 gap-1 border-blue/30 p-3 shadow-2xl shadow-black/60">
+                      {sub.map((s) => (
+                        <li>
+                          <a href={s.href} class="flex items-center gap-2 rounded px-3 py-2.5 text-[0.95rem] font-semibold text-white/85 transition hover:bg-white/5 hover:text-blue">
+                            <span class="h-[3px] w-3 -skew-x-[30deg] bg-orange" aria-hidden="true" />
+                            {s.label}
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </li>
+            );
+          })
+        }
+      </ul>
+    </nav>
+
+    <div class="flex items-center gap-2 sm:gap-3">
+      {
+        telHref && (
+          <a href={telHref} data-track="call_click" class="hidden items-center gap-2 font-display text-lg font-bold tracking-wide text-white hover:text-blue xl:flex">
+            <Icon name="phone" size={20} class="text-blue" />
+            {site.phone}
+          </a>
+        )
+      }
+      <a href="/get-a-quote/" class="btn btn-primary btn-sm sm:!min-h-[2.9rem] sm:!px-5 sm:!text-[1.05rem]" data-track="cta_click" data-cta="header">
+        <span class="hidden sm:inline">Get a Free Quote</span><span class="sm:hidden">Free Quote</span>
+      </a>
+      <button
+        type="button"
+        id="menu-toggle"
+        class="relative -mr-2 grid size-12 place-items-center text-white lg:hidden"
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+      >
+        <span class="sr-only">Open menu</span>
+        <span class="menu-bars" aria-hidden="true"><span></span><span></span><span></span></span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile menu -->
+  <div id="mobile-menu" class="mobile-menu fixed inset-0 top-0 -z-10 flex flex-col overflow-y-auto bg-ink lg:hidden" hidden>
+    <div class="grid-bg pointer-events-none absolute inset-0 opacity-60" aria-hidden="true"></div>
+    <div class="absolute top-0 right-0 h-full w-1/3 -skew-x-12 translate-x-1/3 bg-orange/10" aria-hidden="true"></div>
+    <nav aria-label="Mobile" class="container-x relative flex flex-1 flex-col pt-28 pb-10">
+      <ul class="space-y-1">
+        {
+          nav.map((item, i) => (
+            <li class="menu-item" style={`--i:${i}`}>
+              <a
+                href={item.href}
+                class:list={[
+                  'display flex items-center justify-between border-b border-line py-3.5 text-[2.1rem] leading-none',
+                  isActive(item.href) ? 'text-orange' : 'text-white',
+                ]}
+                aria-current={isActive(item.href) ? 'page' : undefined}
+              >
+                {item.label}
+                <Icon name="arrow" size={22} class="text-blue" />
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <div class="menu-item mt-8 grid gap-3" style="--i:7">
+        <a href="/get-a-quote/" class="btn btn-primary btn-lg w-full" data-track="cta_click" data-cta="mobile_menu">Get My Free Quote</a>
+        {
+          telHref && (
+            <a href={telHref} class="btn btn-outline btn-lg w-full" data-track="call_click">
+              <Icon name="phone" size={20} /> Call {site.phone}
+            </a>
+          )
+        }
+      </div>
+      <p class="menu-item mt-auto pt-10 text-sm text-mute" style="--i:8">Serving {site.areaLabel}.</p>
+    </nav>
+  </div>
+</header>
+
+<style>
+  /* Unscrolled: dark backing keeps nav text legible over hero slabs/stripes */
+  #site-header { background: linear-gradient(to bottom, rgb(11 13 16 / 0.94), rgb(11 13 16 / 0.82)); }
+  #site-header[data-scrolled='true'],
+  #site-header.menu-open {
+    background: rgb(11 13 16 / 0.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 1px 0 rgb(255 255 255 / 0.06), 0 12px 30px -12px rgb(0 0 0 / 0.6);
+  }
+  /* backdrop-filter would make the header the containing block of the fixed menu */
+  #site-header.menu-open { background: var(--color-ink); backdrop-filter: none; -webkit-backdrop-filter: none; }
+  .menu-bars { position: relative; display: block; width: 26px; height: 18px; }
+  .menu-bars span {
+    position: absolute; left: 0; height: 3px; background: currentColor;
+    transition: transform 0.35s var(--ease-out-quint), opacity 0.2s, width 0.3s;
+  }
+  .menu-bars span:nth-child(1) { top: 0; width: 100%; }
+  .menu-bars span:nth-child(2) { top: 7.5px; width: 100%; background: var(--color-orange); }
+  .menu-bars span:nth-child(3) { top: 15px; width: 65%; right: 0; left: auto; }
+  [aria-expanded='true'] .menu-bars span:nth-child(1) { transform: translateY(7.5px) rotate(45deg); }
+  [aria-expanded='true'] .menu-bars span:nth-child(2) { opacity: 0; }
+  [aria-expanded='true'] .menu-bars span:nth-child(3) { width: 100%; transform: translateY(-7.5px) rotate(-45deg); }
+
+  .mobile-menu { clip-path: inset(0 0 100% 0); transition: clip-path 0.5s var(--ease-out-quint); }
+  .mobile-menu.is-open { clip-path: inset(0 0 0 0); }
+  .menu-item { opacity: 0; transform: translateY(16px); transition: opacity 0.4s, transform 0.5s var(--ease-out-quint); }
+  .mobile-menu.is-open .menu-item { opacity: 1; transform: none; transition-delay: calc(80ms + var(--i) * 40ms); }
+</style>
+
+<script>
+  const header = document.getElementById('site-header')!;
+  const toggle = document.getElementById('menu-toggle') as HTMLButtonElement;
+  const menu = document.getElementById('mobile-menu')!;
+  const label = toggle.querySelector('.sr-only')!;
+
+  const onScroll = () => header.setAttribute('data-scrolled', String(window.scrollY > 24));
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  const setOpen = (open: boolean) => {
+    toggle.setAttribute('aria-expanded', String(open));
+    label.textContent = open ? 'Close menu' : 'Open menu';
+    header.classList.toggle('menu-open', open);
+    document.body.style.overflow = open ? 'hidden' : '';
+    if (open) {
+      menu.hidden = false;
+      requestAnimationFrame(() => menu.classList.add('is-open'));
+      (menu.querySelector('a') as HTMLElement | null)?.focus({ preventScroll: true });
+    } else {
+      menu.classList.remove('is-open');
+      setTimeout(() => { if (toggle.getAttribute('aria-expanded') === 'false') menu.hidden = true; }, 450);
+    }
+  };
+
+  toggle.addEventListener('click', () => setOpen(toggle.getAttribute('aria-expanded') !== 'true'));
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') {
+      setOpen(false);
+      toggle.focus();
+    }
+    // Keep focus inside the open menu (focus trap incl. toggle button)
+    if (e.key === 'Tab' && toggle.getAttribute('aria-expanded') === 'true') {
+      const items = [toggle, ...menu.querySelectorAll<HTMLElement>('a, button')];
+      const first = items[0], last = items[items.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
+  });
+  window.matchMedia('(min-width: 1024px)').addEventListener('change', (m) => m.matches && setOpen(false));
+</script>

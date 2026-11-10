@@ -1,0 +1,22 @@
+---
+import Icon from './Icon.astro';
+interface Props { trail: { name: string; href: string }[] }
+const { trail } = Astro.props;
+---
+
+<nav aria-label="Breadcrumb" class="text-sm">
+  <ol class="flex flex-wrap items-center gap-x-2 gap-y-1 text-mute">
+    {
+      trail.map((c, i) => (
+        <li class="flex items-center gap-2">
+          {i > 0 && <Icon name="chevron" size={12} stroke={3} class="-rotate-90 text-orange" />}
+          {i === trail.length - 1 ? (
+            <span aria-current="page" class="font-semibold text-white">{c.name}</span>
+          ) : (
+            <a href={c.href} class="transition hover:text-blue">{c.name}</a>
+          )}
+        </li>
+      ))
+    }
+  </ol>
+</nav>

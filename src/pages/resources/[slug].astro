@@ -1,0 +1,52 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHero from '@/components/sections/PageHero.astro';
+import ServiceCard from '@/components/ui/ServiceCard.astro';
+import CtaBand from '@/components/ui/CtaBand.astro';
+import { getService, services, type Service } from '@/data/services';
+
+export async function getStaticPaths() {
+  const articles = await getCollection('resources', (a) => !a.data.draft);
+  return articles.map((a) => ({ params: { slug: a.id }, props: { article: a } }));
+}
+
+const { article } = Astro.props;
+const { Content } = await render(article);
+const origin = Astro.site?.origin ?? Astro.url.origin;
+const path = `/resources/${article.id}/`;
+const crumbs = [
+  { name: 'Resources', href: '/resources/' },
+  { name: article.data.title, href: path },
+];
+const related = article.data.services.map(getService).filter(Boolean) as Service[];
+const schema = {
+  '@type': 'Article',
+  headline: article.data.title,
+  description: article.data.description,
+  datePublished: article.data.published.toISOString(),
+  dateModified: (article.data.updated ?? article.data.published).toISOString(),
+  mainEntityOfPage: new URL(path, origin).href,
+  author: { '@id': new URL('/#business', origin).href },
+  publisher: { '@id': new URL('/#business', origin).href },
+};
+---
+
+<BaseLayout title={`${article.data.title} | Ozark Junk Removals`} description={article.data.description} crumbs={crumbs} schema={[schema]}>
+  <PageHero title={article.data.title} lead={article.data.description} crumbs={crumbs} />
+  <article class="bg-ink py-16 lg:py-20">
+    <div class="container-x">
+      <div class="prose-oz max-w-3xl"><Content /></div>
+    </div>
+  </article>
+  {
+    related.length > 0 && (
+      <section class="bg-charcoal py-16">
+        <div class="container-x grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {related.map((s) => <ServiceCard service={s} index={services.indexOf(s)} />)}
+        </div>
+      </section>
+    )
+  }
+  <CtaBand />
+</BaseLayout>

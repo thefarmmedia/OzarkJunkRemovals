@@ -1,0 +1,67 @@
+---
+/**
+ * Consent-aware tracking.
+ * - window.ozTrack(event, params) is always defined; it pushes to the dataLayer
+ *   and forwards to gtag / fbq only if those were loaded after consent.
+ * - When no tracking IDs are configured, nothing third-party ever loads and no
+ *   consent banner is shown.
+ * - Google Consent Mode v2 defaults to "denied" until the visitor accepts.
+ */
+import { tracking, trackingEnabled } from '@/config/tracking';
+const cfg = { ...tracking };
+---
+
+<script is:inline define:vars={{ cfg, enabled: trackingEnabled }}>
+  window.dataLayer = window.dataLayer || [];
+  function gtag() { window.dataLayer.push(arguments); }
+  window.ozTrack = function (event, params) {
+    params = params || {};
+    window.dataLayer.push(Object.assign({ event: event }, params));
+    if (window.gtag && cfg.ga4Id) window.gtag('event', event, params);
+    if (event === 'generate_lead') {
+      if (window.gtag && cfg.googleAdsId && cfg.googleAdsLeadLabel)
+        window.gtag('event', 'conversion', { send_to: cfg.googleAdsId + '/' + cfg.googleAdsLeadLabel });
+      if (window.fbq) window.fbq('track', 'Lead', { content_name: params.form_name });
+    }
+    if (event === 'call_click' && window.fbq) window.fbq('track', 'Contact');
+  };
+
+  if (enabled) {
+    gtag('consent', 'default', {
+      ad_storage: 'denied', analytics_storage: 'denied',
+      ad_user_data: 'denied', ad_personalization: 'denied',
+      wait_for_update: 500,
+    });
+
+    window.ozLoadTracking = function () {
+      if (window.__ozLoaded) return;
+      window.__ozLoaded = true;
+      gtag('consent', 'update', {
+        ad_storage: 'granted', analytics_storage: 'granted',
+        ad_user_data: 'granted', ad_personalization: 'granted',
+      });
+      var add = function (src) { var s = document.createElement('script'); s.async = true; s.src = src; document.head.appendChild(s); };
+      if (cfg.gtmId) {
+        window.dataLayer.push({ 'gtm.start': Date.now(), event: 'gtm.js' });
+        add('https://www.googletagmanager.com/gtm.js?id=' + encodeURIComponent(cfg.gtmId));
+      }
+      var gId = cfg.ga4Id || cfg.googleAdsId;
+      if (gId) {
+        window.gtag = gtag;
+        add('https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(gId));
+        gtag('js', new Date());
+        if (cfg.ga4Id) gtag('config', cfg.ga4Id);
+        if (cfg.googleAdsId) gtag('config', cfg.googleAdsId);
+      }
+      if (cfg.metaPixelId) {
+        !function (f, b, e, v, n, t, s) { if (f.fbq) return; n = f.fbq = function () { n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments) }; if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = '2.0'; n.queue = []; t = b.createElement(e); t.async = !0; t.src = v; s = b.getElementsByTagName(e)[0]; s.parentNode.insertBefore(t, s) }(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
+        window.fbq('init', cfg.metaPixelId);
+        window.fbq('track', 'PageView');
+      }
+      if (cfg.callTrackingScript) add(cfg.callTrackingScript);
+    };
+
+    try { if (localStorage.getItem('oz-consent') === 'granted') window.ozLoadTracking(); } catch (e) {}
+  }
+</script>
+

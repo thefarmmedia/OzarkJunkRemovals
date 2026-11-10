@@ -1,0 +1,197 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Breadcrumbs from '@/components/ui/Breadcrumbs.astro';
+import SectionHeading from '@/components/ui/SectionHeading.astro';
+import FaqAccordion from '@/components/ui/FaqAccordion.astro';
+import CtaBand from '@/components/ui/CtaBand.astro';
+import Icon from '@/components/ui/Icon.astro';
+import GarageSaleForm from '@/components/forms/GarageSaleForm.astro';
+import { garageSaleOffer, offerCopy, offerTerms } from '@/config/offer';
+import { cities, cityPath } from '@/data/cities';
+import { service as serviceSchema, faqPage } from '@/lib/schema';
+import type { FAQ } from '@/data/services';
+
+const origin = Astro.site?.origin ?? Astro.url.origin;
+const path = '/garage-sale-junk-pickup/';
+const crumbs = [{ name: 'Garage Sale Cleanup', href: path }];
+const trail = [{ name: 'Home', href: '/' }, ...crumbs];
+const seo = {
+  title: 'Garage Sale Leftover Pickup Springfield MO | Ozark Junk Removals',
+  description:
+    "Garage sale over? Don't haul unsold items back inside. Request leftover pickup in Springfield, MO and ask about free pickup of qualifying items.",
+};
+
+const steps = [
+  { icon: 'calendar', title: 'Request before or after your sale', text: 'Tell us when your sale ends, roughly what might be left and add photos if you have them.' },
+  { icon: 'clipboard', title: 'We confirm the details', text: "We check eligibility, your location and our schedule, and tell you exactly what we can take." },
+  { icon: 'trailer', title: 'We pick up the leftovers', text: 'Our crew loads the unsold items so they never go back into your garage.' },
+] as const;
+
+const faqs: FAQ[] = [
+  {
+    q: 'Is garage-sale leftover pickup really free?',
+    a: garageSaleOffer.mode === 'confirmed'
+      ? 'Yes, for qualifying unsold items that meet the program terms listed on this page.'
+      : "Free pickup is available for qualifying leftover items. Because every sale is different, we confirm eligibility, location and timing for each request before anything is scheduled. If part of a load doesn't qualify, we'll tell you before we load it.",
+  },
+  {
+    q: 'When should I submit my request?',
+    a: 'The earlier the better — ideally a few days before your sale. That gives us the best chance of fitting your pickup into the schedule right after the sale ends.',
+  },
+  {
+    q: 'What if I have more than garage-sale leftovers?',
+    a: "No problem. We can quote a standard junk removal job for anything outside the program — old furniture, appliances, or the rest of the garage — and handle it in the same visit.",
+  },
+  {
+    q: 'Do I need to be home for pickup?',
+    a: "Not always. If items are staged in an accessible spot like the driveway or an open garage, we can talk through a no-contact pickup when we confirm your request.",
+  },
+  {
+    q: 'What happens to the items you pick up?',
+    a: 'Usable items may be routed to donation where local organizations accept them; the rest is disposed of appropriately. We can\'t promise any specific item will be donated.',
+  },
+];
+---
+
+<BaseLayout
+  title={seo.title}
+  description={seo.description}
+  crumbs={crumbs}
+  schema={[serviceSchema(origin, { name: 'Garage sale leftover pickup', description: seo.description, path }), faqPage(faqs)]}
+>
+  <!-- HERO with form -->
+  <section class="gs-hero relative isolate overflow-hidden bg-ink pt-32 pb-16 sm:pt-36 lg:pt-40 lg:pb-24">
+    <div class="absolute inset-0 -z-20 bg-[radial-gradient(ellipse_80%_70%_at_0%_0%,rgb(255_95_0/0.28),transparent_60%)]" aria-hidden="true"></div>
+    <div class="grid-bg absolute inset-0 -z-20" aria-hidden="true"></div>
+    <!-- bunting -->
+    <svg class="absolute inset-x-0 top-[4.75rem] -z-10 h-12 w-full lg:top-[5.25rem]" preserveAspectRatio="none" viewBox="0 0 1200 48" aria-hidden="true">
+      <path d="M0 4 Q600 30 1200 4" stroke="#A7ADB7" stroke-opacity=".5" fill="none" />
+      {Array.from({ length: 24 }, (_, i) => {
+        const x = i * 50 + 10;
+        const y = 4 + 26 * (1 - Math.pow((x - 600) / 600, 2)) * 0.9;
+        return <path d={`M${x} ${y}l20 0-10 20z`} fill={i % 3 === 0 ? '#FF5F00' : i % 3 === 1 ? '#00BFFF' : '#ffffff'} fill-opacity={i % 3 === 2 ? 0.7 : 0.9} />;
+      })}
+    </svg>
+
+    <div class="container-x grid gap-12 lg:grid-cols-[1fr_1.05fr] lg:items-start">
+      <div class="lg:sticky lg:top-32">
+        <div class="animate-rise"><Breadcrumbs trail={trail} /></div>
+        <p class="animate-rise mt-8 inline-flex items-center gap-2 bg-orange px-3 py-1.5 font-display text-sm font-extrabold uppercase tracking-[0.18em] text-ink" style="--d:60ms">
+          <Icon name="tag" size={16} stroke={2.5} /> {offerCopy.badge}
+        </p>
+        <h1 class="mt-5">
+          <span class="display animate-rise block text-[3.4rem] leading-[0.86] sm:text-[4.8rem] lg:text-[5.4rem]" style="--d:120ms">
+            Didn't sell it?<span class="block text-orange [text-shadow:0_0_40px_rgb(255_95_0/0.35)]">Don't store it.</span>
+          </span>
+          <span class="animate-rise mt-5 block font-display text-2xl font-bold uppercase tracking-wide text-white sm:text-3xl" style="--d:200ms">
+            Garage Sale Leftover Pickup in Springfield, MO
+          </span>
+        </h1>
+        <p class="animate-rise mt-5 max-w-xl text-lg text-[#d7dbe1]" style="--d:260ms">
+          You priced it, you hauled it to the driveway, you sat in a lawn chair all morning. The last thing you want is to carry it all back inside. Request a pickup and let our crew take the leftovers.
+        </p>
+        <div class="animate-rise mt-7 flex items-start gap-3 border-l-4 border-blue bg-blue/[0.06] p-4" style="--d:320ms">
+          <Icon name="bolt" size={24} class="mt-0.5 shrink-0 text-blue" />
+          <p class="font-display text-xl font-bold uppercase leading-tight tracking-wide">{offerCopy.headline}</p>
+        </div>
+        <ul class="animate-rise mt-7 grid gap-2 sm:grid-cols-2" style="--d:380ms">
+          {['Furniture, décor & household goods', 'Toys, bikes & sporting goods', 'Request before your sale starts', 'Serving Springfield & nearby towns'].map((t) => (
+            <li class="flex items-center gap-2 text-[0.98rem]"><Icon name="check" size={18} stroke={3} class="shrink-0 text-orange" />{t}</li>
+          ))}
+        </ul>
+      </div>
+      <div class="animate-rise" style="--d:250ms">
+        <GarageSaleForm />
+      </div>
+    </div>
+  </section>
+
+  <!-- How it works -->
+  <section class="bg-charcoal py-20 lg:py-24" aria-labelledby="gs-how">
+    <div class="container-x">
+      <SectionHeading id="gs-how" eyebrow="How the program works" title="From sale day to cleared driveway" highlight="cleared driveway" />
+      <ol class="mt-12 grid gap-4 md:grid-cols-3">
+        {steps.map((s, i) => (
+          <li class="card reveal relative overflow-hidden p-7" style={`--d:${i * 100}ms`}>
+            <span class="absolute -top-4 -right-1 font-display text-[7rem] leading-none font-extrabold italic text-white/[0.04]" aria-hidden="true">{i + 1}</span>
+            <Icon name={s.icon} size={34} class="text-orange" />
+            <h3 class="mt-5 font-display text-2xl font-extrabold uppercase italic leading-none"><span class="sr-only">Step {i + 1}: </span>{s.title}</h3>
+            <p class="mt-3 text-mute">{s.text}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- Fit / not accepted / terms -->
+  <section class="bg-ink py-20 lg:py-24" aria-labelledby="gs-fit">
+    <div class="container-x">
+      <SectionHeading id="gs-fit" eyebrow="What qualifies" title="What we can pick up" />
+      <div class="mt-12 grid gap-5 lg:grid-cols-3">
+        <div class="card reveal border-blue/30 p-7">
+          <h3 class="display flex items-center gap-2 text-2xl"><Icon name="check" size={22} stroke={3} class="text-blue" /> Usually a good fit</h3>
+          <ul class="mt-5 space-y-2.5">{garageSaleOffer.goodFit.map((g) => <li class="flex gap-2.5"><span class="mt-2.5 h-[3px] w-3 shrink-0 -skew-x-[30deg] bg-blue" aria-hidden="true" />{g}</li>)}</ul>
+        </div>
+        <div class="card reveal border-[#ff6b6b]/30 p-7" style="--d:80ms">
+          <h3 class="display flex items-center gap-2 text-2xl"><Icon name="ban" size={22} class="text-[#ff8a8a]" /> Not accepted</h3>
+          <ul class="mt-5 space-y-2.5">{garageSaleOffer.notAccepted.map((g) => <li class="flex gap-2.5 text-mute"><span class="mt-2.5 h-[3px] w-3 shrink-0 -skew-x-[30deg] bg-[#ff8a8a]" aria-hidden="true" />{g}</li>)}</ul>
+        </div>
+        <div class="card reveal border-orange/40 p-7" style="--d:160ms">
+          <h3 class="display flex items-center gap-2 text-2xl"><Icon name="clipboard" size={22} class="text-orange" /> Program terms</h3>
+          <ul class="mt-5 space-y-3 text-[0.97rem] text-[#d7dbe1]">{offerTerms.map((t) => <li class="flex gap-2.5"><span class="mt-2.5 h-[3px] w-3 shrink-0 -skew-x-[30deg] bg-orange" aria-hidden="true" />{t}</li>)}</ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Yard sign tie-in -->
+  <section id="yard-sign" class="relative overflow-hidden bg-charcoal py-20 lg:py-24" aria-labelledby="sign-title">
+    <div class="container-x grid items-center gap-12 lg:grid-cols-2">
+      <div class="reveal order-2 lg:order-1" aria-hidden="true">
+        <div class="relative mx-auto max-w-md">
+          <div class="relative z-10 border-[6px] border-ink bg-orange p-7 text-ink shadow-[0_30px_60px_-20px_rgb(0_0_0/0.8)] sm:p-9">
+            <p class="font-display text-lg font-extrabold uppercase tracking-[0.25em]">Garage sale?</p>
+            <p class="display mt-1 text-[3.4rem] leading-[0.85] sm:text-6xl">Leftovers<br />picked up.</p>
+            <div class="mt-5 flex items-center justify-between gap-3 bg-ink px-4 py-3 text-white">
+              <span class="font-display text-lg font-bold uppercase tracking-wider">Ozark Junk Removals</span>
+              <Icon name="trailer" size={28} class="text-blue" />
+            </div>
+          </div>
+          <div class="mx-auto flex w-[70%] justify-between">
+            <span class="block h-24 w-2.5 bg-[#5b5f66]"></span><span class="block h-24 w-2.5 bg-[#5b5f66]"></span>
+          </div>
+          <div class="h-2 w-full bg-[repeating-linear-gradient(90deg,#2f6b2f_0_6px,#3b833b_6px_10px)] opacity-70"></div>
+        </div>
+      </div>
+      <div class="reveal order-1 lg:order-2">
+        <p class="eyebrow mb-4">Saw our yard sign?</p>
+        <h2 id="sign-title" class="display text-4xl leading-[0.95] sm:text-5xl lg:text-6xl">You're in the <span class="text-orange">right place.</span></h2>
+        <p class="mt-5 text-lg text-[#d7dbe1]">
+          If you spotted an Ozark Junk Removals sign at a sale around town, this is the program it's talking about. Fill out the short form above — it takes about a minute — and we'll be in touch to confirm the details.
+        </p>
+        <ul class="mt-7 space-y-3">
+          <li class="flex gap-3"><Icon name="calendar" size={22} class="mt-0.5 shrink-0 text-blue" /><span><strong>Planning your own sale?</strong> <span class="text-mute">Request pickup before the weekend so your leftovers can be on our schedule.</span></span></li>
+          <li class="flex gap-3"><Icon name="sign" size={22} class="mt-0.5 shrink-0 text-blue" /><span><strong>Tell your shoppers.</strong> <span class="text-mute">A "leftovers being picked up" note can help buyers make a decision before the sale ends.</span></span></li>
+          <li class="flex gap-3"><Icon name="pin" size={22} class="mt-0.5 shrink-0 text-blue" /><span><strong>Local only.</strong> <span class="text-mute">Springfield, {cities.filter((c) => !c.primary).slice(0, 4).map((c) => c.name).join(', ')} and nearby.</span></span></li>
+        </ul>
+        <a href="#top-form" class="btn btn-primary btn-lg mt-8" data-track="cta_click" data-cta="yard_sign">Check Pickup Availability <Icon name="arrow" size={22} class="arrow" /></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="bg-ink py-20 lg:py-24" aria-labelledby="gs-faq">
+    <div class="container-x grid gap-12 lg:grid-cols-[1fr_1.6fr]">
+      <div>
+        <SectionHeading id="gs-faq" eyebrow="FAQ" title="Garage sale pickup questions" />
+        <ul class="reveal mt-8 flex flex-wrap gap-2">
+          {cities.map((c) => <li><a href={cityPath(c.slug)} class="inline-block border border-white/10 px-3 py-1.5 text-sm text-mute transition hover:border-blue hover:text-blue">{c.name}</a></li>)}
+        </ul>
+      </div>
+      <FaqAccordion faqs={faqs} />
+    </div>
+  </section>
+
+  <CtaBand title="Sale's over. Let's clear the driveway." text="Request garage-sale leftover pickup in about a minute." cta="Check Pickup Availability" href="#top-form" />
+</BaseLayout>
+

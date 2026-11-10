@@ -1,0 +1,107 @@
+---
+/**
+ * Hero visual. Drop a real company photo at src/assets/photos/hero.(jpg|png|webp)
+ * and it replaces the technical illustration automatically.
+ * Never use stock photos here as if they were company jobs.
+ */
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+const found = import.meta.glob<{ default: ImageMetadata }>('/src/assets/photos/hero.{jpg,jpeg,png,webp}', { eager: true });
+const photo = Object.values(found)[0]?.default;
+---
+
+{
+  photo ? (
+    <div class="relative aspect-[4/3] w-full overflow-hidden" style="clip-path: polygon(8% 0, 100% 0, 92% 100%, 0 100%)">
+      <Image src={photo} alt="Ozark Junk Removals crew loading a trailer" widths={[480, 720, 960, 1280]} sizes="(min-width: 1024px) 50vw, 100vw" loading="eager" fetchpriority="high" class="h-full w-full object-cover" />
+    </div>
+  ) : (
+    <figure class="hero-drawing relative w-full" aria-label="Technical illustration of a high-side hauling trailer loaded with household junk">
+      <svg viewBox="0 0 640 420" class="w-full overflow-visible" role="img" aria-hidden="true" fill="none" stroke-linecap="square">
+        <defs>
+          <radialGradient id="hv-glow">
+            <stop offset="0" stop-color="#00BFFF" stop-opacity=".22" />
+            <stop offset="1" stop-color="#00BFFF" stop-opacity="0" />
+          </radialGradient>
+          <pattern id="hv-hatch" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+            <path d="M0 0v8" stroke="#FF5F00" stroke-width="2" stroke-opacity=".55" />
+          </pattern>
+        </defs>
+
+        <!-- ground + glow -->
+        <ellipse cx="320" cy="250" rx="330" ry="170" fill="url(#hv-glow)" />
+        <path class="draw" style="--len:600;--d:0s" d="M20 356h600" stroke="#00BFFF" stroke-opacity=".5" stroke-dasharray="6 8" />
+
+        <!-- load (behind sides) -->
+        <g class="load" stroke="#fff" stroke-width="2.2">
+          <!-- fridge -->
+          <path class="draw" style="--len:420;--d:.9s" d="M120 168V68h62v100" />
+          <path class="draw" style="--len:80;--d:1.1s" d="M120 102h62M130 80v12M130 114v18" />
+          <!-- mattress, leaning -->
+          <path class="draw" style="--len:520;--d:1s" d="M196 168l40-128 46 14-38 114" />
+          <path class="draw" style="--len:160;--d:1.2s" d="M214 110l46 14M226 72l46 14" stroke-opacity=".5" />
+          <!-- sofa -->
+          <path class="draw" style="--len:620;--d:1.1s" d="M292 168v-48h12v-30h132v30h12v48" />
+          <path class="draw" style="--len:180;--d:1.3s" d="M304 120h132M370 90v30" stroke-opacity=".6" />
+          <!-- boxes -->
+          <rect class="draw" style="--len:220;--d:1.2s" x="456" y="118" width="56" height="50" />
+          <rect class="draw" style="--len:180;--d:1.35s" x="466" y="80" width="42" height="38" />
+          <path class="draw" style="--len:120;--d:1.45s" d="M456 136h56M466 94h42" stroke-opacity=".5" />
+          <!-- chair legs + lamp -->
+          <path class="draw" style="--len:200;--d:1.4s" d="M260 168l10-34h26l6 34M272 134l-8-30" />
+        </g>
+
+        <!-- high-side box -->
+        <rect x="96" y="168" width="430" height="122" fill="#0B0D10" />
+        <rect x="96" y="168" width="430" height="122" fill="url(#hv-hatch)" opacity=".18" />
+        <path class="draw" style="--len:1110;--d:.2s" d="M96 168h430v122H96z" stroke="#00BFFF" stroke-width="3" />
+        <path class="draw" style="--len:1200;--d:.45s" d="M139 168v122M182 168v122M225 168v122M268 168v122M311 168v122M354 168v122M397 168v122M440 168v122M483 168v122" stroke="#00BFFF" stroke-opacity=".35" stroke-width="1.5" />
+        <path class="draw" style="--len:430;--d:.5s" d="M96 186h430" stroke="#FF5F00" stroke-width="5" />
+
+        <!-- tongue + jack -->
+        <path class="draw" style="--len:260;--d:.6s" d="M526 282l92 8M526 260l92 30" stroke="#00BFFF" stroke-width="3" />
+        <path class="draw" style="--len:80;--d:.7s" d="M594 290v42M584 332h20" stroke="#00BFFF" stroke-width="3" />
+        <circle cx="620" cy="290" r="6" stroke="#FF5F00" stroke-width="3" />
+
+        <!-- wheels -->
+        <g stroke="#fff" stroke-width="3">
+          <path class="draw" style="--len:200;--d:.7s" d="M192 290a50 50 0 0 1 100 0" stroke="#00BFFF" />
+          <circle class="draw" style="--len:220;--d:.8s" cx="216" cy="320" r="34" />
+          <circle class="draw" style="--len:220;--d:.85s" cx="290" cy="320" r="34" />
+          <circle cx="216" cy="320" r="10" stroke="#FF5F00" />
+          <circle cx="290" cy="320" r="10" stroke="#FF5F00" />
+        </g>
+
+        <!-- callouts -->
+        <g class="callouts" font-family="Barlow Condensed, sans-serif" font-weight="700" font-size="13" letter-spacing="2" fill="#A7ADB7">
+          <path d="M151 64V36h-30" fill="none" stroke="#FF5F00" stroke-width="1.5" />
+          <text x="58" y="40">APPLIANCES</text>
+          <path d="M370 86V30h40" fill="none" stroke="#FF5F00" stroke-width="1.5" />
+          <text x="416" y="34">FURNITURE</text>
+          <path d="M487 78V56h60" fill="none" stroke="#FF5F00" stroke-width="1.5" />
+          <text x="552" y="60">BOXES</text>
+          <path d="M96 392h430" stroke="#00BFFF" stroke-opacity=".6" />
+          <path d="M96 386v12M526 386v12" stroke="#00BFFF" stroke-opacity=".6" />
+          <text x="236" y="414" fill="#00BFFF">HIGH-SIDE HAULING TRAILER</text>
+        </g>
+      </svg>
+      <figcaption class="sr-only">Illustration only — not a photo of a completed job.</figcaption>
+    </figure>
+  )
+}
+
+<style>
+  .hero-drawing .draw {
+    stroke-dasharray: var(--len);
+    stroke-dashoffset: var(--len);
+    animation: dash 1.4s var(--ease-out-quint) forwards;
+    animation-delay: var(--d);
+  }
+  .hero-drawing path.draw[stroke-dasharray='6 8'] { stroke-dasharray: 6 8; stroke-dashoffset: 0; animation: none; }
+  .hero-drawing .callouts { opacity: 0; animation: rise 0.8s var(--ease-out-quint) 1.6s forwards; }
+  @media (prefers-reduced-motion: reduce) {
+    .hero-drawing .draw { stroke-dashoffset: 0; animation: none; }
+    .hero-drawing .callouts { opacity: 1; animation: none; }
+  }
+</style>

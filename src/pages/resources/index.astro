@@ -1,0 +1,63 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHero from '@/components/sections/PageHero.astro';
+import CtaBand from '@/components/ui/CtaBand.astro';
+import Icon from '@/components/ui/Icon.astro';
+import { plannedArticles } from '@/data/resources';
+
+const crumbs = [{ name: 'Resources', href: '/resources/' }];
+const articles = (await getCollection('resources', (a) => !a.data.draft)).sort(
+  (a, b) => b.data.published.getTime() - a.data.published.getTime(),
+);
+const publishedTitles = new Set(articles.map((a) => a.data.title.toLowerCase()));
+const upcoming = plannedArticles.filter((p) => !publishedTitles.has(p.title.toLowerCase()));
+---
+
+<BaseLayout
+  title="Junk Removal Tips & Guides | Springfield, MO | Ozark Junk Removals"
+  description="Practical guides on junk removal, cleanouts and disposal in Springfield, MO — what it costs, what can be hauled, and how to prepare."
+  crumbs={crumbs}
+>
+  <PageHero eyebrow="Helpful resources" title="Junk removal guides & tips" lead="Practical, local advice on clearing out, cleaning up and getting rid of stuff the right way." crumbs={crumbs} />
+
+  <section class="bg-ink py-20 lg:py-24">
+    <div class="container-x">
+      {
+        articles.length > 0 && (
+          <ul class="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+            {articles.map((a) => (
+              <li>
+                <a href={`/resources/${a.id}/`} class="card card-glow group flex h-full flex-col p-7 hover:border-blue/60">
+                  <time class="text-sm text-mute" datetime={a.data.published.toISOString()}>{a.data.published.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</time>
+                  <h2 class="mt-3 font-display text-2xl font-extrabold uppercase italic leading-tight">{a.data.title}</h2>
+                  <p class="mt-3 flex-1 text-mute">{a.data.description}</p>
+                  <span class="mt-5 inline-flex items-center gap-2 font-display font-bold uppercase tracking-wider text-blue">Read guide <Icon name="arrow" size={18} /></span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        )
+      }
+
+      {
+        upcoming.length > 0 && (
+          <div class:list={[articles.length > 0 && 'mt-20']}>
+            <h2 class="display text-3xl sm:text-4xl">Guides in the works</h2>
+            <p class="mt-3 max-w-2xl text-mute">We're writing these from real jobs and local disposal rules — not filler. Have a question you'd like answered? Ask it in your quote request.</p>
+            <ul class="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+              {upcoming.map((p) => (
+                <li class="card p-6 opacity-90">
+                  <span class="inline-block bg-white/5 px-2 py-0.5 font-display text-xs font-bold uppercase tracking-widest text-mute">Coming soon</span>
+                  <h3 class="mt-3 font-display text-xl font-extrabold uppercase italic leading-tight">{p.title}</h3>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )
+      }
+    </div>
+  </section>
+
+  <CtaBand />
+</BaseLayout>

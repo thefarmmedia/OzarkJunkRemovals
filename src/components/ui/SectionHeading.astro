@@ -1,0 +1,23 @@
+---
+interface Props {
+  eyebrow?: string;
+  title: string;
+  /** Word(s) of the title to highlight in orange. */
+  highlight?: string;
+  intro?: string;
+  align?: 'left' | 'center';
+  as?: 'h1' | 'h2';
+  id?: string;
+}
+const { eyebrow, title, highlight, intro, align = 'left', as: Tag = 'h2', id } = Astro.props;
+const parts = highlight && title.includes(highlight) ? title.split(highlight) : null;
+---
+
+<div class:list={['reveal max-w-3xl', align === 'center' && 'mx-auto text-center']}>
+  {eyebrow && <p class:list={['eyebrow mb-4', align === 'center' && 'justify-center']}>{eyebrow}</p>}
+  <Tag id={id} class="display text-[2.5rem] leading-[0.95] sm:text-5xl lg:text-[3.75rem]">
+    {parts ? (<>{parts[0]}<span class="text-orange">{highlight}</span>{parts[1]}</>) : title}
+  </Tag>
+  {intro && <p class="mt-5 text-lg text-mute">{intro}</p>}
+  <slot />
+</div>

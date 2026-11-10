@@ -1,0 +1,78 @@
+---
+import { Image } from 'astro:assets';
+import logo from '@/assets/brand/logo.png';
+import Icon from '@/components/ui/Icon.astro';
+import { site, telHref } from '@/config/site';
+import { services } from '@/data/services';
+import { cities, cityPath } from '@/data/cities';
+import { offerCopy } from '@/config/offer';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="relative overflow-hidden border-t border-line bg-[#08090b] pb-28 lg:pb-0">
+  <div class="grid-bg pointer-events-none absolute inset-0 opacity-50" aria-hidden="true"></div>
+  <div class="container-x relative grid gap-12 py-16 md:grid-cols-2 lg:grid-cols-[1.3fr_1fr_1fr_1fr] lg:py-20">
+    <div>
+      <a href="/" aria-label={`${site.name} — home`} class="inline-block">
+        <Image src={logo} alt={site.name} width={200} widths={[200, 400]} sizes="200px" class="h-auto w-[200px]" />
+      </a>
+      <p class="mt-5 max-w-sm text-mute">
+        Locally operated junk removal and hauling for Springfield and Southwest Missouri. We do the heavy lifting — you get your space back.
+      </p>
+      <div class="mt-6 flex flex-col gap-3">
+        <a href="/get-a-quote/" class="btn btn-primary self-start" data-track="cta_click" data-cta="footer">Get a Free Quote</a>
+        {
+          telHref && (
+            <a href={telHref} class="flex items-center gap-2 font-display text-xl font-bold hover:text-blue" data-track="call_click">
+              <Icon name="phone" size={20} class="text-blue" /> {site.phone}
+            </a>
+          )
+        }
+        {
+          site.email && (
+            <a href={`mailto:${site.email}`} class="flex items-center gap-2 text-mute hover:text-blue">
+              <Icon name="mail" size={18} class="text-blue" /> {site.email}
+            </a>
+          )
+        }
+      </div>
+    </div>
+
+    <nav aria-labelledby="f-services">
+      <h2 id="f-services" class="display mb-4 text-xl text-white">Services</h2>
+      <ul class="space-y-2.5">
+        {services.map((s) => <li><a href={`/services/${s.slug}/`} class="text-mute transition hover:text-blue">{s.name}</a></li>)}
+      </ul>
+    </nav>
+
+    <nav aria-labelledby="f-areas">
+      <h2 id="f-areas" class="display mb-4 text-xl text-white">Service Areas</h2>
+      <ul class="space-y-2.5">
+        {cities.map((c) => <li><a href={cityPath(c.slug)} class="text-mute transition hover:text-blue">Junk Removal {c.name}, MO</a></li>)}
+      </ul>
+    </nav>
+
+    <nav aria-labelledby="f-company">
+      <h2 id="f-company" class="display mb-4 text-xl text-white">Company</h2>
+      <ul class="space-y-2.5">
+        <li><a href="/about/" class="text-mute transition hover:text-blue">About Us</a></li>
+        <li><a href="/garage-sale-junk-pickup/" class="text-mute transition hover:text-blue">Garage Sale Leftover Pickup</a></li>
+        <li><a href="/resources/" class="text-mute transition hover:text-blue">Helpful Resources</a></li>
+        <li><a href="/get-a-quote/" class="text-mute transition hover:text-blue">Get a Quote</a></li>
+        <li><a href="/privacy/" class="text-mute transition hover:text-blue">Privacy Policy</a></li>
+      </ul>
+      <a href="/garage-sale-junk-pickup/" class="card mt-6 block border-orange/40 p-4 transition hover:border-orange">
+        <span class="flex items-center gap-2 font-display text-sm font-bold uppercase tracking-widest text-orange"><Icon name="tag" size={16} /> {offerCopy.badge}</span>
+        <span class="mt-1 block text-sm text-white/85">{offerCopy.short}.</span>
+      </a>
+    </nav>
+  </div>
+
+  <div class="relative border-t border-line">
+    <div class="container-x flex flex-col gap-2 py-6 text-sm text-mute sm:flex-row sm:items-center sm:justify-between">
+      <p>&copy; {year} {site.name}. All rights reserved.</p>
+      <p>Junk removal &amp; hauling · {site.areaLabel}</p>
+    </div>
+  </div>
+</footer>

@@ -1,0 +1,38 @@
+---
+import { trackingEnabled } from '@/config/tracking';
+---
+
+{
+  trackingEnabled && (
+    <>
+      <div id="consent" class="fixed inset-x-3 bottom-24 z-[60] mx-auto hidden max-w-xl lg:bottom-6" role="region" aria-label="Cookie consent">
+        <div class="card border-blue/30 bg-ink p-5 shadow-2xl shadow-black/70">
+          <p class="text-sm text-white/90">
+            We use cookies to understand how visitors use this site and to measure our ads. You can accept or decline analytics and advertising cookies.{' '}
+            <a href="/privacy/" class="text-blue underline">Privacy policy</a>
+          </p>
+          <div class="mt-4 flex gap-3">
+            <button type="button" data-consent="granted" class="btn btn-primary btn-sm">Accept</button>
+            <button type="button" data-consent="denied" class="btn btn-outline btn-sm">Decline</button>
+          </div>
+        </div>
+      </div>
+      <script is:inline>
+        (function () {
+          var el = document.getElementById('consent');
+          var choice = null;
+          try { choice = localStorage.getItem('oz-consent'); } catch (e) {}
+          if (!choice) el.classList.remove('hidden');
+          el.addEventListener('click', function (e) {
+            var v = e.target.closest && e.target.closest('[data-consent]');
+            if (!v) return;
+            var val = v.getAttribute('data-consent');
+            try { localStorage.setItem('oz-consent', val); } catch (err) {}
+            el.classList.add('hidden');
+            if (val === 'granted') window.ozLoadTracking();
+          });
+        })();
+      </script>
+    </>
+  )
+}

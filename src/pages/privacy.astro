@@ -1,0 +1,52 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHero from '@/components/sections/PageHero.astro';
+import { site } from '@/config/site';
+
+const crumbs = [{ name: 'Privacy Policy', href: '/privacy/' }];
+// PLACEHOLDER: update the effective date and have this reviewed before launch.
+const effective = '[Effective date — set before launch]';
+---
+
+<BaseLayout
+  title="Privacy Policy | Ozark Junk Removals"
+  description="How Ozark Junk Removals collects, uses and protects the information you share through our website."
+  crumbs={crumbs}
+>
+  <PageHero title="Privacy policy" lead="Plain-language details on what we collect and why." crumbs={crumbs} />
+  <section class="bg-ink py-16 lg:py-20">
+    <div class="container-x">
+      <div class="prose-oz max-w-3xl">
+        <p><strong>Effective:</strong> {effective}</p>
+
+        <h2>What we collect</h2>
+        <p>When you request an estimate or pickup, we collect the details you choose to send: your name, phone number, email, ZIP code and city, a description of the items, your preferred dates, and any photos you upload. We also record the page you submitted from and, if present, basic campaign information in the link you followed (such as UTM parameters) so we know which advertising is working.</p>
+        <p>We don't ask for payment information, government ID numbers or other sensitive personal information through this website.</p>
+
+        <h2>How we use it</h2>
+        <ul>
+          <li>To review your request and prepare an estimate.</li>
+          <li>To contact you by phone, text or email about your request.</li>
+          <li>To schedule and complete the job.</li>
+          <li>To understand which pages and ads bring in requests, so we can improve them.</li>
+        </ul>
+        <p>We don't sell your personal information or share it with others for their own marketing.</p>
+
+        <h2>Where it's stored</h2>
+        <p>Form submissions and uploaded photos are processed and stored by our website host, Netlify, on our behalf. Access is limited to people at {site.name} who need it to respond to you.</p>
+
+        <h2>Cookies &amp; analytics</h2>
+        <p>The site works without tracking cookies. If we enable analytics or advertising tools (such as Google Analytics, Google Ads or the Meta Pixel), they only load after you accept them in the cookie banner. You can change your choice at any time by clearing this site's data in your browser.</p>
+
+        <h2>Photos</h2>
+        <p>Photos you send are used to estimate your job. We will never post photos of your property publicly without your permission.</p>
+
+        <h2>Your choices</h2>
+        <p>You can ask us to update or delete the information you've sent by contacting us{site.email ? <> at <a href={`mailto:${site.email}`}>{site.email}</a></> : ' using the details on our website'}. If you no longer want texts from us, reply STOP to any message.</p>
+
+        <h2>Changes</h2>
+        <p>If we change this policy, we'll update the effective date above.</p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

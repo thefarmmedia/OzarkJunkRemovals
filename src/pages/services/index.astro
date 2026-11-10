@@ -1,0 +1,74 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHero from '@/components/sections/PageHero.astro';
+import HowItWorks from '@/components/sections/HowItWorks.astro';
+import ServiceCard from '@/components/ui/ServiceCard.astro';
+import SectionHeading from '@/components/ui/SectionHeading.astro';
+import CtaBand from '@/components/ui/CtaBand.astro';
+import Icon from '@/components/ui/Icon.astro';
+import { services, notAccepted } from '@/data/services';
+
+const crumbs = [{ name: 'Services', href: '/services/' }];
+const audiences = [
+  { title: 'Homeowners', text: 'Garages, basements, furniture swaps and spring cleaning.' },
+  { title: 'Landlords & property managers', text: 'Tenant turnovers and abandoned-item removal.' },
+  { title: 'Realtors', text: 'Pre-listing and pre-closing cleanouts.' },
+  { title: 'Estate executors', text: 'Organized, respectful whole-house cleanouts.' },
+  { title: 'Contractors', text: 'Remodel debris and job-site cleanup.' },
+  { title: 'Businesses', text: 'Office, retail and warehouse cleanouts.' },
+];
+---
+
+<BaseLayout
+  title="Junk Removal Services in Springfield, MO | Ozark Junk Removals"
+  description="Full-service junk removal in Springfield, MO: furniture and appliance removal, garage, estate and hoarding cleanouts, debris and commercial hauling."
+  crumbs={crumbs}
+>
+  <PageHero
+    eyebrow="Our services"
+    title="Junk removal services in Springfield, MO"
+    lead="Every service works the same simple way: you tell us what needs to go, we give you a straightforward estimate, and our crew does all the lifting, loading and hauling."
+    crumbs={crumbs}
+  />
+
+  <section class="bg-ink py-20 lg:py-24" aria-labelledby="all-services">
+    <div class="container-x">
+      <h2 id="all-services" class="display text-3xl sm:text-4xl">All {services.length} services</h2>
+      <div class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-5">
+        {services.map((s, i) => <ServiceCard service={s} index={i} />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-charcoal py-20 lg:py-24" aria-labelledby="who-title">
+    <div class="container-x">
+      <SectionHeading id="who-title" eyebrow="Who we help" title="Built for homes and businesses" />
+      <ul class="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {audiences.map((a, i) => (
+          <li class="card reveal flex gap-4 p-6" style={`--d:${(i % 3) * 70}ms`}>
+            <Icon name="check" size={22} stroke={3} class="mt-1 shrink-0 text-blue" />
+            <div>
+              <h3 class="font-display text-2xl font-extrabold uppercase italic leading-none">{a.title}</h3>
+              <p class="mt-2 text-mute">{a.text}</p>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <HowItWorks />
+
+  <section class="bg-charcoal py-20" aria-labelledby="exclusions-title">
+    <div class="container-x grid gap-10 lg:grid-cols-[1fr_1.4fr] lg:items-center">
+      <SectionHeading id="exclusions-title" eyebrow="Safety first" title="What we can't take" intro="These items need specialized handling and aren't loaded with regular junk. Ask us — we'll point you to the right local disposal option when we can." />
+      <ul class="reveal grid gap-3 sm:grid-cols-2">
+        {notAccepted.map((n) => (
+          <li class="flex items-center gap-3 border border-white/10 bg-ink px-4 py-3"><Icon name="ban" size={20} class="shrink-0 text-[#ff8a8a]" />{n}</li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <CtaBand />
+</BaseLayout>

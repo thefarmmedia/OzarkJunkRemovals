@@ -1,0 +1,56 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHero from '@/components/sections/PageHero.astro';
+import ServiceAreaMap from '@/components/sections/ServiceAreaMap.astro';
+import CtaBand from '@/components/ui/CtaBand.astro';
+import Icon from '@/components/ui/Icon.astro';
+import { cities, cityPath } from '@/data/cities';
+
+const crumbs = [{ name: 'Service Areas', href: '/service-areas/' }];
+---
+
+<BaseLayout
+  title="Service Areas: Springfield & SW Missouri | Ozark Junk Removals"
+  description="Junk removal in Springfield, MO and nearby Nixa, Ozark, Republic, Battlefield, Willard, Rogersville and Strafford. See ZIP codes and get a free estimate."
+  crumbs={crumbs}
+>
+  <PageHero
+    eyebrow="Where we work"
+    title="Junk removal across Springfield & the Ozarks"
+    lead="Springfield is home base. We also serve the surrounding communities in Greene and Christian Counties. If your town isn't listed, send a request anyway — we'll tell you honestly whether we can get there."
+    crumbs={crumbs}
+  />
+
+  <ServiceAreaMap heading={false} />
+
+  <section class="bg-ink py-20 lg:py-24" aria-labelledby="zip-title">
+    <div class="container-x">
+      <h2 id="zip-title" class="display text-4xl sm:text-5xl">Communities &amp; ZIP codes</h2>
+      <div class="mt-10 overflow-x-auto">
+        <table class="w-full min-w-[34rem] border-collapse text-left">
+          <caption class="sr-only">Service area communities, counties and ZIP codes</caption>
+          <thead>
+            <tr class="border-b-2 border-orange font-display text-lg uppercase tracking-wider text-mute">
+              <th scope="col" class="py-3 pr-4">Community</th>
+              <th scope="col" class="py-3 pr-4">County</th>
+              <th scope="col" class="py-3 pr-4">ZIP codes</th>
+              <th scope="col" class="py-3"><span class="sr-only">Link</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            {cities.map((c) => (
+              <tr class="border-b border-line">
+                <th scope="row" class="py-4 pr-4 font-display text-xl font-extrabold uppercase italic">{c.name}{c.primary && <span class="ml-2 bg-orange px-2 py-0.5 align-middle text-xs not-italic text-ink">Home base</span>}</th>
+                <td class="py-4 pr-4 text-mute">{c.county}</td>
+                <td class="py-4 pr-4 text-mute">{c.zips.join(', ')}</td>
+                <td class="py-4 text-right"><a href={cityPath(c.slug)} class="inline-flex items-center gap-1.5 font-semibold text-blue hover:underline">Junk removal in {c.name}<Icon name="arrow" size={16} /></a></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <CtaBand title="In our area? Let's clear it out." />
+</BaseLayout>

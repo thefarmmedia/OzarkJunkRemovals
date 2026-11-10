@@ -1,0 +1,50 @@
+---
+import SectionHeading from '@/components/ui/SectionHeading.astro';
+import Icon from '@/components/ui/Icon.astro';
+import type { IconName } from '@/components/ui/icons';
+
+interface Props {
+  steps?: { title: string; text: string }[];
+  title?: string;
+  eyebrow?: string;
+}
+const defaults = [
+  { title: 'Tell Us What Needs to Go', text: 'Fill out the quick quote form and add a few photos. A rough description is plenty to start.' },
+  { title: 'Get Your Estimate', text: "We review what you sent and give you a straightforward estimate. No pressure, no obligation." },
+  { title: "We Load It & Haul It Away", text: 'Our crew shows up, does all the lifting and loading, and handles the disposal run.' },
+];
+const { steps = defaults, title = 'How it works', eyebrow = 'Three simple steps' } = Astro.props;
+const icons: IconName[] = ['camera', 'clipboard', 'trailer'];
+---
+
+<section class="relative overflow-hidden bg-ink py-20 lg:py-28" aria-labelledby="how-title">
+  <div class="container-x">
+    <SectionHeading id="how-title" eyebrow={eyebrow} title={title} align="center" />
+    <div class="relative mt-14 lg:mt-20">
+    <div class="pointer-events-none absolute top-[3.25rem] right-[16%] left-[16%] hidden h-[3px] lg:block" aria-hidden="true">
+      <span class="block h-full bg-[linear-gradient(90deg,var(--color-orange)_0_12px,transparent_12px_22px)] bg-[length:22px_3px]"></span>
+    </div>
+    <ol class="relative grid gap-12 lg:grid-cols-3 lg:gap-8">
+      {
+        steps.map((s, i) => (
+          <li class="reveal relative text-center" style={`--d:${i * 140}ms`}>
+            <div class="relative mx-auto grid size-[6.5rem] place-items-center">
+              <span class="absolute inset-0 rotate-45 border-2 border-blue/40 bg-ink" aria-hidden="true" />
+              <span class="absolute inset-3 rotate-45 bg-charcoal ring-1 ring-white/10" aria-hidden="true" />
+              <Icon name={icons[i % icons.length]} size={34} class="relative text-orange" />
+              <span class="absolute -top-2 -right-2 grid size-9 place-items-center bg-orange font-display text-lg font-extrabold text-ink" aria-hidden="true">{i + 1}</span>
+            </div>
+            <h3 class="mt-8 font-display text-[1.75rem] font-extrabold uppercase italic leading-none">
+              <span class="sr-only">Step {i + 1}: </span>{s.title}
+            </h3>
+            <p class="mx-auto mt-3 max-w-xs text-mute">{s.text}</p>
+          </li>
+        ))
+      }
+    </ol>
+    </div>
+    <div class="reveal mt-14 text-center">
+      <a href="/get-a-quote/" class="btn btn-primary btn-lg" data-track="cta_click" data-cta="how_it_works">Start Step One <Icon name="arrow" size={22} class="arrow" /></a>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,52 @@
+---
+/** Homepage promo for the garage-sale leftover program. Reads offer config. */
+import Icon from '@/components/ui/Icon.astro';
+import { offerCopy, garageSaleOffer } from '@/config/offer';
+---
+
+<section class="promo relative isolate overflow-hidden bg-ink py-20 lg:py-28" aria-labelledby="gs-promo-title">
+  <div class="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_60%_80%_at_85%_50%,rgb(255_95_0/0.22),transparent_70%)]" aria-hidden="true"></div>
+  <div class="container-x">
+    <div class="relative overflow-hidden border-2 border-orange bg-[#120c08] shadow-[0_0_80px_-20px_rgb(255_95_0/0.6)]" style="clip-path: polygon(0 0, calc(100% - 40px) 0, 100% 40px, 100% 100%, 40px 100%, 0 calc(100% - 40px))">
+      <div class="hazard h-3" aria-hidden="true"></div>
+      <div class="grid gap-10 p-7 sm:p-10 lg:grid-cols-[1.35fr_1fr] lg:items-center lg:p-14">
+        <div class="reveal">
+          <p class="inline-flex items-center gap-2 bg-orange px-3 py-1.5 font-display text-sm font-extrabold uppercase tracking-[0.18em] text-ink">
+            <Icon name="tag" size={16} stroke={2.5} /> {offerCopy.badge}
+          </p>
+          <h2 id="gs-promo-title" class="display mt-5 text-[2.7rem] leading-[0.9] sm:text-6xl lg:text-[4.4rem]">
+            Garage sale over? <span class="text-orange">We'll take what didn't sell.</span>
+          </h2>
+          <p class="mt-5 max-w-xl text-lg text-[#d7dbe1]">
+            Don't spend another weekend moving unsold items back into your garage. Ask about our garage-sale leftover pickup program.
+          </p>
+          <p class="mt-4 font-display text-xl font-bold uppercase tracking-wide text-blue">{offerCopy.headline}</p>
+          <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+            <a href="/garage-sale-junk-pickup/" class="btn btn-primary btn-lg" data-track="cta_click" data-cta="garage_sale_promo">
+              Check Pickup Availability <Icon name="arrow" size={22} class="arrow" />
+            </a>
+          </div>
+          <p class="mt-4 text-sm text-mute">Eligibility, service area and pickup timing are confirmed for each request.</p>
+        </div>
+
+        <!-- price-tag style graphic -->
+        <div class="reveal relative mx-auto w-full max-w-sm" style="--d:150ms" aria-hidden="true">
+          <div class="tag relative rotate-[-6deg] bg-white px-8 pt-14 pb-10 text-ink shadow-2xl" style="clip-path: polygon(22% 0, 78% 0, 100% 14%, 100% 100%, 0 100%, 0 14%)">
+            <span class="absolute top-5 left-1/2 size-6 -translate-x-1/2 rounded-full bg-ink ring-4 ring-orange"></span>
+            <p class="text-center font-display text-lg font-bold uppercase tracking-[0.3em]">Didn't sell?</p>
+            <p class="display mt-1 text-center text-[4.2rem] leading-[0.85] text-orange">Don't<br />store it.</p>
+            <ul class="mt-6 space-y-1.5 border-t-2 border-dashed border-ink/25 pt-5 text-[0.95rem] font-semibold">
+              {garageSaleOffer.goodFit.slice(0, 4).map((g) => <li class="flex items-center gap-2"><Icon name="check" size={16} stroke={3} class="text-orange" />{g}</li>)}
+            </ul>
+          </div>
+          <div class="absolute -top-6 right-2 h-16 w-1 origin-bottom rotate-12 bg-white/30"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .tag { transition: transform 0.6s var(--ease-out-quint); }
+  .promo:hover .tag { transform: rotate(-3deg) translateY(-4px); }
+</style>

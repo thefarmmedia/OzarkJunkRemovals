@@ -1,0 +1,57 @@
+---
+import Icon from './Icon.astro';
+import { site, telHref } from '@/config/site';
+interface Props {
+  title?: string;
+  text?: string;
+  cta?: string;
+  href?: string;
+}
+const {
+  title = 'Ready to get your space back?',
+  text = "Tell us what needs to go, and we'll help you take the next step.",
+  cta = 'Get a Free Estimate',
+  href = '/get-a-quote/',
+} = Astro.props;
+---
+
+<section class="cta-band relative isolate overflow-hidden bg-orange py-20 text-ink sm:py-24 lg:py-28" aria-labelledby="cta-band-title">
+  <div class="absolute inset-0 -z-10 opacity-[0.12] [background-image:repeating-linear-gradient(-45deg,#0B0D10_0_2px,transparent_2px_22px)]" aria-hidden="true"></div>
+  <div class="absolute top-0 -right-24 -z-10 hidden h-full w-[46%] -skew-x-12 bg-ink lg:block" aria-hidden="true"></div>
+  <div class="absolute top-0 right-[calc(46%-6.5rem)] -z-10 hidden h-full w-3 -skew-x-12 bg-blue lg:block" aria-hidden="true"></div>
+
+  <div class="container-x grid items-center gap-10 lg:grid-cols-[1.15fr_1fr]">
+    <div class="reveal">
+      <h2 id="cta-band-title" class="display text-[2.9rem] leading-[0.9] sm:text-6xl lg:text-7xl">{title}</h2>
+      <p class="mt-5 max-w-lg text-xl font-semibold text-ink/85">{text}</p>
+    </div>
+    <div class="reveal flex flex-col gap-4 sm:flex-row lg:flex-col lg:items-center xl:flex-row xl:justify-center" style="--d:120ms">
+      <a href={href} class="btn btn-lg cta-main" data-track="cta_click" data-cta="cta_band">
+        {cta} <Icon name="arrow" size={22} class="arrow" />
+      </a>
+      {
+        telHref && (
+          <a href={telHref} class="btn btn-lg cta-call" data-track="call_click" data-cta="cta_band">
+            <Icon name="phone" size={20} /> {site.phone}
+          </a>
+        )
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  /* Mobile: dark button on orange. Desktop: button sits on the black slab → orange button. */
+  .cta-main { color: #fff; }
+  .cta-main::before { background: var(--color-ink); }
+  .cta-main:hover::before { background: #000; box-shadow: 0 14px 34px -12px rgb(0 0 0 / 0.8); }
+  .cta-call { color: var(--color-ink); }
+  .cta-call::before { border: 2px solid var(--color-ink); }
+  @media (min-width: 1024px) {
+    .cta-main { color: var(--color-ink); }
+    .cta-main::before { background: var(--color-orange); }
+    .cta-main:hover::before { background: var(--color-orange-hot); box-shadow: 0 10px 40px -8px rgb(255 95 0 / 0.65); }
+    .cta-call { color: #fff; }
+    .cta-call::before { border-color: var(--color-blue); }
+  }
+</style>

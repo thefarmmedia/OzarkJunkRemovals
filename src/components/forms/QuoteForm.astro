@@ -1,0 +1,199 @@
+---
+/**
+ * Main quote form — Netlify Forms (name="quote").
+ * 3 steps with JS (progress bar, per-step validation); a single long form
+ * without JS. Submits via fetch (multipart, incl. photos) then redirects to
+ * /thank-you/. Fallback: native POST to /thank-you/.
+ */
+import Icon from '@/components/ui/Icon.astro';
+import LoadSizeSelector from './LoadSizeSelector.astro';
+import PhotoUploader from './PhotoUploader.astro';
+import { services } from '@/data/services';
+import { cities } from '@/data/cities';
+import { site, telHref } from '@/config/site';
+
+interface Props {
+  idPrefix?: string;
+  defaultService?: string;
+  defaultCity?: string;
+  heading?: string;
+}
+const { idPrefix = 'q', defaultService, defaultCity, heading = 'Get your free estimate' } = Astro.props;
+const id = (s: string) => `${idPrefix}-${s}`;
+const steps = ['The junk', 'The location', 'Your info'];
+---
+
+<form
+  name="quote"
+  method="POST"
+  action="/thank-you/"
+  enctype="multipart/form-data"
+  data-netlify="true"
+  netlify-honeypot="company_website"
+  data-lead-form="quote"
+  class="lead-form card relative border-white/10 bg-[#141619] p-5 sm:p-8"
+  novalidate
+>
+  <input type="hidden" name="form-name" value="quote" />
+  <input type="hidden" name="page_url" value="" data-fill="page_url" />
+  <input type="hidden" name="utm_source" value="" data-fill="utm_source" />
+  <input type="hidden" name="utm_medium" value="" data-fill="utm_medium" />
+  <input type="hidden" name="utm_campaign" value="" data-fill="utm_campaign" />
+  <input type="hidden" name="gclid" value="" data-fill="gclid" />
+  <input type="hidden" name="fbclid" value="" data-fill="fbclid" />
+  <p class="hidden" aria-hidden="true">
+    <label>Leave this empty: <input name="company_website" tabindex="-1" autocomplete="off" /></label>
+  </p>
+
+  <div class="mb-6 flex items-end justify-between gap-4">
+    <h2 class="display text-3xl leading-none sm:text-4xl">{heading}</h2>
+    <span class="hidden shrink-0 text-sm font-semibold text-mute sm:block">Takes about 60 seconds</span>
+  </div>
+
+  <!-- Progress (JS only) -->
+  <div class="form-progress mb-7 hidden" aria-hidden="true">
+    <ol class="grid grid-cols-3 gap-2">
+      {
+        steps.map((s, i) => (
+          <li class="progress-step" data-step-indicator={i}>
+            <span class="block h-1.5 -skew-x-[30deg] bg-white/10 transition-colors duration-500" />
+            <span class="mt-2 flex items-center gap-1.5 font-display text-sm font-bold uppercase tracking-wider text-mute transition-colors">
+              <span class="step-num">{i + 1}</span> {s}
+            </span>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+  <p class="sr-only" aria-live="polite" data-step-announcer></p>
+
+  <!-- STEP 1 -->
+  <fieldset class="form-step space-y-6" data-step="0">
+    <legend class="step-legend sr-only">Step 1 of 3: The junk</legend>
+    <div>
+      <label for={id('service')} class="field-label">What do you need?<span class="req" aria-hidden="true">*</span></label>
+      <select id={id('service')} name="service" class="input" required aria-describedby={id('service-err')}>
+        <option value="">Choose a service…</option>
+        {services.map((s) => <option value={s.formLabel} selected={s.slug === defaultService}>{s.formLabel}</option>)}
+        <option value="Garage sale leftover pickup">Garage sale leftover pickup</option>
+        <option value="Not sure / other">Not sure / other</option>
+      </select>
+      <p id={id('service-err')} class="field-error" data-error-for="service">Please choose the closest option.</p>
+    </div>
+
+    <LoadSizeSelector idPrefix={idPrefix} required />
+
+    <div>
+      <label for={id('description')} class="field-label">What needs to go?<span class="req" aria-hidden="true">*</span></label>
+      <textarea
+        id={id('description')}
+        name="description"
+        class="input"
+        rows="4"
+        required
+        minlength="5"
+        maxlength="2000"
+        placeholder="e.g. Old sectional and a fridge in the basement, plus about 10 boxes in the garage."
+        aria-describedby={id('description-hint') + ' ' + id('description-err')}></textarea>
+      <p id={id('description-hint')} class="field-hint">Mention stairs, heavy items or anything unusual.</p>
+      <p id={id('description-err')} class="field-error" data-error-for="description">Tell us a little about what needs to go.</p>
+    </div>
+
+    <PhotoUploader idPrefix={idPrefix} />
+  </fieldset>
+
+  <!-- STEP 2 -->
+  <fieldset class="form-step space-y-6" data-step="1">
+    <legend class="step-legend sr-only">Step 2 of 3: The location</legend>
+    <div class="grid gap-5 sm:grid-cols-2">
+      <div>
+        <label for={id('zip')} class="field-label">ZIP code<span class="req" aria-hidden="true">*</span></label>
+        <input id={id('zip')} name="zip" class="input" inputmode="numeric" autocomplete="postal-code" pattern="[0-9]{5}" maxlength="5" required aria-describedby={id('zip-err')} placeholder="65802" />
+        <p id={id('zip-err')} class="field-error" data-error-for="zip">Enter a 5-digit ZIP code.</p>
+      </div>
+      <div>
+        <label for={id('city')} class="field-label">City</label>
+        <select id={id('city')} name="city" class="input" autocomplete="address-level2">
+          <option value="">Choose…</option>
+          {cities.map((c) => <option value={c.name} selected={c.slug === defaultCity}>{c.name}</option>)}
+          <option value="Other">Other nearby town</option>
+        </select>
+      </div>
+    </div>
+    <div class="grid gap-5 sm:grid-cols-2">
+      <div>
+        <label for={id('date')} class="field-label">Preferred service date</label>
+        <input id={id('date')} name="preferred_date" type="date" class="input" data-min-today aria-describedby={id('date-hint')} />
+        <p id={id('date-hint')} class="field-hint">Optional. We'll confirm what's available.</p>
+      </div>
+      <div>
+        <label for={id('time')} class="field-label">Best time of day</label>
+        <select id={id('time')} name="preferred_time" class="input">
+          <option value="Flexible">Flexible</option>
+          <option value="Morning">Morning</option>
+          <option value="Afternoon">Afternoon</option>
+          <option value="As soon as possible">As soon as possible</option>
+        </select>
+      </div>
+    </div>
+  </fieldset>
+
+  <!-- STEP 3 -->
+  <fieldset class="form-step space-y-6" data-step="2">
+    <legend class="step-legend sr-only">Step 3 of 3: Your info</legend>
+    <div>
+      <label for={id('name')} class="field-label">Your name<span class="req" aria-hidden="true">*</span></label>
+      <input id={id('name')} name="name" class="input" autocomplete="name" required maxlength="100" aria-describedby={id('name-err')} />
+      <p id={id('name-err')} class="field-error" data-error-for="name">Please enter your name.</p>
+    </div>
+    <div class="grid gap-5 sm:grid-cols-2">
+      <div>
+        <label for={id('phone')} class="field-label">Phone<span class="req" aria-hidden="true">*</span></label>
+        <input id={id('phone')} name="phone" type="tel" class="input" autocomplete="tel" inputmode="tel" required pattern="[\d\s\-\(\)\+\.]{10,20}" aria-describedby={id('phone-err')} placeholder="(417) " />
+        <p id={id('phone-err')} class="field-error" data-error-for="phone">Enter a phone number we can reach you at.</p>
+      </div>
+      <div>
+        <label for={id('email')} class="field-label">Email<span class="req" aria-hidden="true">*</span></label>
+        <input id={id('email')} name="email" type="email" class="input" autocomplete="email" required maxlength="150" aria-describedby={id('email-err')} />
+        <p id={id('email-err')} class="field-error" data-error-for="email">Enter a valid email address.</p>
+      </div>
+    </div>
+    <div>
+      <label class="flex cursor-pointer items-start gap-3 text-[0.95rem] text-[#cfd3d9]">
+        <input type="checkbox" name="contact_consent" value="yes" required class="mt-1 size-5 shrink-0 accent-orange" aria-describedby={id('consent-err')} />
+        <span>I agree that {site.name} may contact me by phone, text or email about this request. Message &amp; data rates may apply. We never sell your information. <a href="/privacy/" class="text-blue underline">Privacy policy</a></span>
+      </label>
+      <p id={id('consent-err')} class="field-error" data-error-for="contact_consent">Please confirm we can contact you about your estimate.</p>
+    </div>
+  </fieldset>
+
+  <!-- Status + nav -->
+  <div class="form-alert mt-6 hidden rounded border border-[#ff6b6b]/50 bg-[#ff6b6b]/10 p-4 text-sm text-white" role="alert" tabindex="-1">
+    <p class="font-bold">Sorry — your request didn't go through.</p>
+    <p class="mt-1 text-white/80">
+      Please check your connection and try again.{telHref && <> You can also call us at <a href={telHref} class="text-blue underline">{site.phone}</a>.</>}
+    </p>
+  </div>
+
+  <div class="mt-8 flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-between">
+    <button type="button" class="form-back btn btn-outline hidden" data-nav="back">
+      <Icon name="arrow" size={18} class="rotate-180" /> Back
+    </button>
+    <button type="button" class="form-next btn btn-primary btn-lg hidden w-full sm:ml-auto sm:w-auto" data-nav="next">
+      Continue <Icon name="arrow" size={20} class="arrow" />
+    </button>
+    <button type="submit" class="form-submit btn btn-primary btn-lg w-full sm:ml-auto sm:w-auto">
+      <span class="submit-label">Send My Request</span>
+      <span class="submit-loading hidden items-center gap-2"><span class="spinner" aria-hidden="true"></span> Sending…</span>
+      <Icon name="arrow" size={20} class="arrow submit-arrow" />
+    </button>
+  </div>
+  <p class="mt-4 flex items-center gap-2 text-xs text-mute">
+    <Icon name="check" size={14} class="text-blue" /> Free estimate · No obligation · Your info is only used to respond to your request.
+  </p>
+</form>
+
+<script>
+  import { initLeadForms } from '@/scripts/lead-form';
+  initLeadForms();
+</script>

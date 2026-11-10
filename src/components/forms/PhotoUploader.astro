@@ -1,0 +1,49 @@
+---
+/**
+ * Photo upload for Netlify Forms.
+ * Netlify accepts one file per input and ~8 MB per submission, so we expose
+ * three named inputs (photo_1..3). With JS, a single drop zone fills them and
+ * downsizes big phone photos in the browser first. Without JS, the three
+ * native file inputs are shown instead.
+ */
+import Icon from '@/components/ui/Icon.astro';
+interface Props { idPrefix: string; max?: number }
+const { idPrefix, max = 3 } = Astro.props;
+const slots = Array.from({ length: max }, (_, i) => i + 1);
+---
+
+<div class="uploader" data-uploader data-max={max}>
+  <span class="field-label" id={`${idPrefix}-photos-label`}>Photos <span class="font-normal text-mute">(optional, up to {max} — speeds up your estimate)</span></span>
+
+  <!-- Enhanced UI (shown when JS is available) -->
+  <div class="uploader-enhanced hidden">
+    <button
+      type="button"
+      class="uploader-drop group flex w-full flex-col items-center justify-center gap-2 rounded border-2 border-dashed border-blue/40 bg-blue/[0.04] px-4 py-7 text-center transition hover:border-blue hover:bg-blue/[0.08]"
+      aria-describedby={`${idPrefix}-photos-label ${idPrefix}-photos-status`}
+    >
+      <span class="grid size-12 place-items-center rounded-full bg-blue/15 text-blue transition group-hover:scale-110"><Icon name="camera" size={24} /></span>
+      <span class="font-display text-lg font-bold uppercase tracking-wide">Add photos</span>
+      <span class="text-sm text-mute">Tap to take or choose photos · or drag them here</span>
+    </button>
+    <input type="file" accept="image/*" multiple class="uploader-picker sr-only" tabindex="-1" aria-hidden="true" />
+    <ul class="uploader-previews mt-3 grid grid-cols-3 gap-2.5" aria-live="polite"></ul>
+    <p id={`${idPrefix}-photos-status`} class="field-hint uploader-status" aria-live="polite"></p>
+  </div>
+
+  <!-- Native fallback + the actual submitted inputs -->
+  <div class="uploader-native mt-1 grid gap-2">
+    {
+      slots.map((n) => (
+        <input
+          type="file"
+          name={`photo_${n}`}
+          id={`${idPrefix}-photo-${n}`}
+          accept="image/*"
+          class="input !min-h-0 py-2 text-sm file:mr-3 file:border-0 file:bg-blue file:px-3 file:py-1.5 file:font-bold file:text-ink"
+          aria-label={`Photo ${n}`}
+        />
+      ))
+    }
+  </div>
+</div>

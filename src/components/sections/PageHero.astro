@@ -1,0 +1,65 @@
+---
+import Breadcrumbs from '@/components/ui/Breadcrumbs.astro';
+import Icon from '@/components/ui/Icon.astro';
+import { site, telHref } from '@/config/site';
+
+interface Props {
+  eyebrow?: string;
+  title: string;
+  lead?: string;
+  crumbs: { name: string; href: string }[];
+  ctaLabel?: string;
+  ctaHref?: string;
+  secondaryLabel?: string;
+  secondaryHref?: string;
+  /** Show the right-hand slot (e.g. a summary card) on desktop. */
+  hasAside?: boolean;
+}
+const {
+  eyebrow,
+  title,
+  lead,
+  crumbs,
+  ctaLabel = 'Get My Free Quote',
+  ctaHref = '/get-a-quote/',
+  secondaryLabel,
+  secondaryHref,
+  hasAside = false,
+} = Astro.props;
+const trail = [{ name: 'Home', href: '/' }, ...crumbs];
+---
+
+<section class="relative isolate overflow-hidden border-b border-line bg-ink pt-32 pb-16 sm:pt-36 lg:pt-44 lg:pb-24">
+  <div class="grid-bg absolute inset-0 -z-20" aria-hidden="true"></div>
+  <div class="absolute inset-0 -z-20 bg-[radial-gradient(ellipse_at_top_left,rgb(0_191_255/0.12),transparent_55%)]" aria-hidden="true"></div>
+  <div class="hero-slab absolute top-0 -right-40 -z-10 h-full w-[48%] -skew-x-12 bg-gradient-to-b from-orange/20 via-orange/5 to-transparent max-md:hidden" aria-hidden="true"></div>
+  <div class="absolute top-0 right-[calc(48%-1rem)] -z-10 h-full w-1 -skew-x-12 bg-orange/60 max-md:hidden" aria-hidden="true"></div>
+
+  <div class:list={['container-x', hasAside && 'grid items-center gap-12 lg:grid-cols-[1.25fr_1fr]']}>
+    <div>
+      <div class="animate-rise"><Breadcrumbs trail={trail} /></div>
+      {eyebrow && <p class="eyebrow animate-rise mt-8" style="--d:60ms">{eyebrow}</p>}
+      <h1 class="display animate-rise mt-4 max-w-4xl text-[2.9rem] leading-[0.9] sm:text-6xl lg:text-[5rem]" style="--d:120ms">{title}</h1>
+      {lead && <p class="animate-rise mt-6 max-w-2xl text-lg text-[#cfd3d9] sm:text-xl" style="--d:180ms">{lead}</p>}
+      <div class="animate-rise mt-9 flex flex-col gap-3 sm:flex-row sm:flex-wrap" style="--d:240ms">
+        <a href={ctaHref} class="btn btn-primary btn-lg" data-track="cta_click" data-cta="page_hero">
+          {ctaLabel} <Icon name="arrow" size={22} class="arrow" />
+        </a>
+        {
+          secondaryLabel && secondaryHref && (
+            <a href={secondaryHref} class="btn btn-outline btn-lg">{secondaryLabel}</a>
+          )
+        }
+        {
+          !secondaryLabel && telHref && (
+            <a href={telHref} class="btn btn-outline btn-lg" data-track="call_click" data-cta="page_hero">
+              <Icon name="phone" size={20} /> {site.phone}
+            </a>
+          )
+        }
+      </div>
+      <slot name="below" />
+    </div>
+    {hasAside && <div class="animate-rise" style="--d:300ms"><slot name="aside" /></div>}
+  </div>
+</section>

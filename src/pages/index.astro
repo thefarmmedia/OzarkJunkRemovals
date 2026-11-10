@@ -1,0 +1,91 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import HomeHero from '@/components/sections/HomeHero.astro';
+import TrustStrip from '@/components/sections/TrustStrip.astro';
+import HowItWorks from '@/components/sections/HowItWorks.astro';
+import BeforeAfterGallery from '@/components/sections/BeforeAfterGallery.astro';
+import GarageSalePromo from '@/components/sections/GarageSalePromo.astro';
+import ServiceAreaMap from '@/components/sections/ServiceAreaMap.astro';
+import SectionHeading from '@/components/ui/SectionHeading.astro';
+import ServiceCard from '@/components/ui/ServiceCard.astro';
+import FaqAccordion from '@/components/ui/FaqAccordion.astro';
+import Testimonials from '@/components/ui/Testimonials.astro';
+import CtaBand from '@/components/ui/CtaBand.astro';
+import Icon from '@/components/ui/Icon.astro';
+import { services, notAccepted } from '@/data/services';
+import { homeFaqs } from '@/data/faqs';
+import { faqPage } from '@/lib/schema';
+
+const seo = {
+  title: 'Junk Removal Springfield MO | Ozark Junk Removals | Free Estimates',
+  description:
+    'Junk removal in Springfield, MO. Our local crew does the lifting, loading and hauling — furniture, appliances, garage and property cleanouts. Free estimates.',
+};
+
+const haul = [
+  'Furniture & mattresses', 'Appliances', 'Garage & basement clutter', 'Yard waste & brush', 'Remodel debris',
+  'Electronics', 'Hot tubs & playsets*', 'Office furniture', 'Exercise equipment', 'Tenant leave-behinds',
+];
+---
+
+<BaseLayout title={seo.title} description={seo.description} schema={[faqPage(homeFaqs)]}>
+  <HomeHero />
+  <TrustStrip />
+
+  <!-- SERVICES -->
+  <section id="services" class="relative bg-ink py-20 lg:py-28" aria-labelledby="services-title">
+    <div class="container-x">
+      <div class="flex flex-col justify-between gap-8 lg:flex-row lg:items-end">
+        <SectionHeading
+          id="services-title"
+          eyebrow="What we haul"
+          title="Junk removal services for every kind of mess"
+          highlight="every kind of mess"
+          intro="Homeowners, landlords, realtors, executors and contractors call us for the same reason: they need it gone, and they don't want to haul it themselves."
+        />
+        <a href="/services/" class="reveal inline-flex shrink-0 items-center gap-2 font-display text-lg font-bold uppercase tracking-wider text-blue hover:underline">
+          All services <Icon name="arrow" size={20} />
+        </a>
+      </div>
+      <div class="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-5">
+        {services.map((s, i) => <ServiceCard service={s} index={i} featured={i === 0} />)}
+      </div>
+
+      <!-- What we take / don't take -->
+      <div class="mt-16 grid gap-5 lg:grid-cols-[1.6fr_1fr]">
+        <div class="reveal card p-6 sm:p-8">
+          <h3 class="display flex items-center gap-3 text-2xl"><Icon name="check" size={24} stroke={3} class="text-blue" /> Commonly hauled</h3>
+          <ul class="mt-5 flex flex-wrap gap-2">
+            {haul.map((h) => <li class="border border-white/10 bg-white/[0.03] px-3 py-1.5 text-[0.95rem] font-medium">{h}</li>)}
+          </ul>
+          <p class="mt-4 text-sm text-mute">*Some larger items need a quick assessment first.</p>
+        </div>
+        <div class="reveal card border-[#ff6b6b]/25 p-6 sm:p-8" style="--d:100ms">
+          <h3 class="display flex items-center gap-3 text-2xl"><Icon name="ban" size={24} class="text-[#ff8a8a]" /> Not with regular junk</h3>
+          <ul class="mt-5 grid grid-cols-1 gap-1.5 text-[0.95rem] text-mute xs:grid-cols-2 lg:grid-cols-1">
+            {notAccepted.slice(0, 6).map((n) => <li>{n}</li>)}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <HowItWorks />
+  <BeforeAfterGallery />
+  <GarageSalePromo />
+  <ServiceAreaMap />
+  <Testimonials />
+
+  <!-- FAQ -->
+  <section class="bg-ink py-20 lg:py-28" aria-labelledby="faq-title">
+    <div class="container-x grid gap-12 lg:grid-cols-[1fr_1.6fr]">
+      <div class="lg:sticky lg:top-32 lg:self-start">
+        <SectionHeading id="faq-title" eyebrow="FAQ" title="Straight answers" highlight="answers" intro="Don't see your question? Ask it in your quote request — we'll answer it honestly." />
+        <a href="/get-a-quote/" class="reveal btn btn-outline mt-8" data-track="cta_click" data-cta="faq">Ask Us Directly</a>
+      </div>
+      <FaqAccordion faqs={homeFaqs} />
+    </div>
+  </section>
+
+  <CtaBand />
+</BaseLayout>

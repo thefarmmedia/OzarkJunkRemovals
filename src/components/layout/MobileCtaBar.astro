@@ -1,0 +1,47 @@
+---
+import Icon from '@/components/ui/Icon.astro';
+import { telHref } from '@/config/site';
+---
+
+<div
+  id="mobile-cta"
+  class="fixed inset-x-0 bottom-0 z-40 border-t border-white/10 bg-ink/95 px-3 pt-2.5 pb-[max(0.625rem,env(safe-area-inset-bottom))] backdrop-blur-md transition-transform duration-300 lg:hidden"
+  data-hidden="true"
+>
+  <div class:list={['grid gap-2.5', telHref ? 'grid-cols-[auto_1fr]' : 'grid-cols-1']}>
+    {
+      telHref && (
+        <a href={telHref} class="btn btn-outline !min-h-[3.1rem] !px-4" data-track="call_click" data-cta="sticky_mobile">
+          <Icon name="phone" size={20} />
+          <span>Call</span>
+        </a>
+      )
+    }
+    <a href="/get-a-quote/" class="btn btn-primary !min-h-[3.1rem]" data-track="cta_click" data-cta="sticky_mobile">
+      Get My Free Quote <Icon name="arrow" size={20} class="arrow" />
+    </a>
+  </div>
+</div>
+
+<style>
+  #mobile-cta[data-hidden='true'] { transform: translateY(110%); }
+</style>
+
+<script>
+  // Reveal the sticky CTA after the visitor scrolls past the hero; hide it over forms.
+  const bar = document.getElementById('mobile-cta');
+  if (bar) {
+    let overForm = false;
+    const update = () => bar.setAttribute('data-hidden', String(window.scrollY < 420 || overForm));
+    const forms = document.querySelectorAll('form[data-lead-form]');
+    if (forms.length && 'IntersectionObserver' in window) {
+      const io = new IntersectionObserver((entries) => {
+        overForm = entries.some((e) => e.isIntersecting);
+        update();
+      });
+      forms.forEach((f) => io.observe(f));
+    }
+    update();
+    window.addEventListener('scroll', update, { passive: true });
+  }
+</script>

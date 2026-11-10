@@ -1,0 +1,167 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHero from '@/components/sections/PageHero.astro';
+import HowItWorks from '@/components/sections/HowItWorks.astro';
+import SectionHeading from '@/components/ui/SectionHeading.astro';
+import FaqAccordion from '@/components/ui/FaqAccordion.astro';
+import ServiceCard from '@/components/ui/ServiceCard.astro';
+import CtaBand from '@/components/ui/CtaBand.astro';
+import Icon from '@/components/ui/Icon.astro';
+import QuoteForm from '@/components/forms/QuoteForm.astro';
+import { services, getService, notAccepted, type Service } from '@/data/services';
+import { cities, cityPath } from '@/data/cities';
+import { service as serviceSchema, faqPage } from '@/lib/schema';
+
+export function getStaticPaths() {
+  return services.map((s) => ({ params: { slug: s.slug }, props: { service: s } }));
+}
+
+interface Props { service: Service }
+const { service: s } = Astro.props;
+const origin = Astro.site?.origin ?? Astro.url.origin;
+const path = `/services/${s.slug}/`;
+const related = s.related.map(getService).filter(Boolean) as Service[];
+const relatedCities = cities.filter((c) => c.featuredServices.includes(s.slug));
+const crumbs = [
+  { name: 'Services', href: '/services/' },
+  { name: s.name, href: path },
+];
+---
+
+<BaseLayout
+  title={s.seo.title}
+  description={s.seo.description}
+  crumbs={crumbs}
+  schema={[serviceSchema(origin, { name: s.name, description: s.seo.description, path }), faqPage(s.faqs)]}
+>
+  <PageHero eyebrow={s.eyebrow} title={s.h1} lead={s.lead} crumbs={crumbs} hasAside secondaryLabel="How it works" secondaryHref="#process">
+    <div slot="aside" class="card border-blue/25 p-6 sm:p-8">
+      <div class="flex items-center gap-4">
+        <span class="grid size-14 place-items-center bg-orange text-ink" style="clip-path: polygon(0 0, 78% 0, 100% 22%, 100% 100%, 0 100%)"><Icon name={s.icon} size={28} /></span>
+        <p class="display text-2xl leading-none">{s.name}<span class="block text-base font-semibold not-italic tracking-wider text-blue">Springfield &amp; SW Missouri</span></p>
+      </div>
+      <ul class="mt-6 space-y-3">
+        {s.benefits.map((b) => (
+          <li class="flex gap-3">
+            <Icon name="check" size={20} stroke={3} class="mt-0.5 shrink-0 text-orange" />
+            <span><span class="font-bold">{b.title}.</span> <span class="text-mute">{b.text}</span></span>
+          </li>
+        ))}
+      </ul>
+      <a href="#quote" class="btn btn-primary mt-7 w-full" data-track="cta_click" data-cta="service_aside">Get a Free Estimate</a>
+    </div>
+  </PageHero>
+
+  <!-- Description + items -->
+  <section class="bg-ink py-20 lg:py-24" aria-labelledby="about-service">
+    <div class="container-x grid gap-12 lg:grid-cols-[1.25fr_1fr] lg:gap-16">
+      <div class="reveal">
+        <p class="eyebrow mb-4">The service</p>
+        <h2 id="about-service" class="display text-4xl leading-[0.95] sm:text-5xl">What to expect from {s.name.toLowerCase()}</h2>
+        <div class="prose-oz mt-6">
+          {s.body.map((p) => <p>{p}</p>)}
+        </div>
+        {
+          s.notice && (
+            <aside class="mt-8 flex gap-4 border-l-4 border-orange bg-orange/[0.07] p-5">
+              <Icon name="alert" size={24} class="mt-0.5 shrink-0 text-orange" />
+              <div>
+                <p class="font-display text-lg font-bold uppercase tracking-wide">{s.notice.title}</p>
+                <p class="mt-1 text-[0.98rem] text-[#d7dbe1]">{s.notice.text}</p>
+              </div>
+            </aside>
+          )
+        }
+      </div>
+      <div class="reveal" style="--d:120ms">
+        <div class="card p-6 sm:p-8">
+          <h2 class="display text-3xl">{s.itemsHeading}</h2>
+          <ul class="mt-5 grid gap-x-6 gap-y-2.5 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
+            {s.items.map((it) => (
+              <li class="flex items-start gap-2.5 text-[0.98rem]">
+                <span class="mt-2.5 h-[3px] w-3 shrink-0 -skew-x-[30deg] bg-orange" aria-hidden="true" />{it}
+              </li>
+            ))}
+          </ul>
+          <details class="group mt-6 border-t border-line pt-4">
+            <summary class="flex cursor-pointer list-none items-center justify-between font-display font-bold uppercase tracking-wider text-mute hover:text-white [&::-webkit-details-marker]:hidden">
+              Items we can't take with regular junk <Icon name="chevron" size={16} stroke={3} class="transition group-open:rotate-180" />
+            </summary>
+            <ul class="mt-3 grid gap-1.5 text-sm text-mute sm:grid-cols-2">{notAccepted.map((n) => <li>{n}</li>)}</ul>
+          </details>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div id="process">
+    <HowItWorks steps={s.process} title={`How ${s.name.toLowerCase()} works`} eyebrow="The process" />
+  </div>
+
+  <!-- Benefits -->
+  <section class="bg-charcoal py-20 lg:py-24" aria-labelledby="benefits-title">
+    <div class="container-x">
+      <SectionHeading id="benefits-title" eyebrow="Why Ozark Junk Removals" title="Why people call us" />
+      <ul class="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {s.benefits.map((b, i) => (
+          <li class="card reveal p-6" style={`--d:${i * 70}ms`}>
+            <span class="font-display text-4xl font-extrabold italic text-orange/80">0{i + 1}</span>
+            <h3 class="mt-3 font-display text-2xl font-extrabold uppercase italic leading-none">{b.title}</h3>
+            <p class="mt-2 text-mute">{b.text}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- FAQ + areas -->
+  <section class="bg-ink py-20 lg:py-24" aria-labelledby="svc-faq">
+    <div class="container-x grid gap-12 lg:grid-cols-[1.6fr_1fr]">
+      <div>
+        <SectionHeading id="svc-faq" eyebrow="FAQ" title={`${s.name} questions`} />
+        <div class="mt-8"><FaqAccordion faqs={s.faqs} /></div>
+      </div>
+      <aside class="reveal lg:pt-4" aria-labelledby="svc-areas">
+        <div class="card p-6 sm:p-8">
+          <h2 id="svc-areas" class="display text-2xl">{s.name} near you</h2>
+          <p class="mt-2 text-sm text-mute">Based in Springfield and serving nearby communities.</p>
+          <ul class="mt-5 space-y-1">
+            {(relatedCities.length ? relatedCities : cities).map((c) => (
+              <li>
+                <a href={cityPath(c.slug)} class="group flex items-center justify-between border-b border-line py-2.5 hover:text-blue">
+                  <span class="font-semibold">{s.name} in {c.name}, MO</span>
+                  <Icon name="arrow" size={16} class="text-blue transition group-hover:translate-x-1" />
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- Quote form -->
+  <section id="quote" class="relative overflow-hidden bg-charcoal py-20 lg:py-24" aria-label="Request a quote">
+    <div class="grid-bg pointer-events-none absolute inset-0 opacity-50" aria-hidden="true"></div>
+    <div class="container-x relative grid gap-10 lg:grid-cols-[1fr_1.3fr] lg:items-start">
+      <div class="reveal lg:sticky lg:top-32">
+        <p class="eyebrow mb-4">Free estimate</p>
+        <p class="display text-4xl leading-[0.95] sm:text-5xl">Tell us what needs to go.</p>
+        <p class="mt-4 text-lg text-mute">Photos help us give you an accurate estimate faster. No obligation — if the plan doesn't work for you, no hard feelings.</p>
+      </div>
+      <QuoteForm idPrefix="svc" defaultService={s.slug} heading={`${s.name} estimate`} />
+    </div>
+  </section>
+
+  <!-- Related -->
+  <section class="bg-ink py-20 lg:py-24" aria-labelledby="related-title">
+    <div class="container-x">
+      <SectionHeading id="related-title" eyebrow="Related services" title="Need something else hauled?" />
+      <div class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {related.map((r) => <ServiceCard service={r} index={services.indexOf(r)} />)}
+      </div>
+    </div>
+  </section>
+
+  <CtaBand />
+</BaseLayout>

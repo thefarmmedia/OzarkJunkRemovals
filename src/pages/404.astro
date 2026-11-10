@@ -1,0 +1,23 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Icon from '@/components/ui/Icon.astro';
+import { services } from '@/data/services';
+---
+
+<BaseLayout title="Page Not Found | Ozark Junk Removals" description="This page couldn't be found." noindex>
+  <section class="relative isolate flex min-h-[85vh] items-center overflow-hidden bg-ink pt-36 pb-24">
+    <div class="grid-bg absolute inset-0 -z-20" aria-hidden="true"></div>
+    <div class="container-x">
+      <p class="display text-[8rem] leading-none text-orange/90 sm:text-[12rem]" aria-hidden="true">404</p>
+      <h1 class="display mt-2 text-5xl sm:text-6xl">Looks like this page got hauled off.</h1>
+      <p class="mt-5 max-w-xl text-lg text-mute">The page you're looking for doesn't exist or has moved. Try one of these instead:</p>
+      <div class="mt-9 flex flex-col gap-3 sm:flex-row">
+        <a href="/" class="btn btn-primary btn-lg">Back to Home <Icon name="arrow" size={22} class="arrow" /></a>
+        <a href="/get-a-quote/" class="btn btn-outline btn-lg">Get a Free Quote</a>
+      </div>
+      <ul class="mt-12 flex flex-wrap gap-2">
+        {services.map((s) => <li><a href={`/services/${s.slug}/`} class="inline-block border border-white/10 px-3 py-1.5 text-sm transition hover:border-blue hover:text-blue">{s.name}</a></li>)}
+      </ul>
+    </div>
+  </section>
+</BaseLayout>

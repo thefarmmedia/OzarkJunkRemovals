@@ -1,0 +1,66 @@
+---
+/**
+ * Visual load-size picker (radio group). The trailer graphic fills to show
+ * roughly how much space each option takes. No prices — by design.
+ */
+interface Props { name?: string; idPrefix: string; required?: boolean }
+const { name = 'load_size', idPrefix, required = false } = Astro.props;
+
+const options = [
+  { value: 'Single item', label: 'Single Item', hint: 'One bulky piece', fill: 0 },
+  { value: 'Small load', label: 'Small Load', hint: 'A few items', fill: 0.25 },
+  { value: 'Half trailer', label: 'Half Trailer', hint: 'Room or garage corner', fill: 0.5 },
+  { value: 'Full trailer', label: 'Full Trailer', hint: 'Full garage / basement', fill: 1 },
+  { value: 'Multiple loads', label: 'Multiple Loads', hint: 'Whole-property job', fill: 2 },
+  { value: 'Not sure', label: 'Not Sure', hint: "We'll help estimate", fill: -1 },
+];
+---
+
+<fieldset class="load-size" aria-describedby={`${idPrefix}-load-err`}>
+  <legend class="field-label">Approximately how much junk?{required && <span class="req" aria-hidden="true">*</span>}</legend>
+  <div class="mt-1 grid grid-cols-2 gap-2.5 sm:grid-cols-3">
+    {
+      options.map((o, i) => (
+        <label class="ls-option group relative cursor-pointer">
+          <input type="radio" name={name} value={o.value} class="peer sr-only" required={required && i === 0} />
+          <span class="flex h-full flex-col items-center gap-2 rounded border-[1.5px] border-[#3a3d43] bg-[#0e1013] px-2 py-3.5 text-center transition peer-checked:border-orange peer-checked:bg-orange/10 peer-focus-visible:outline-3 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-blue hover:border-[#5a5e66]">
+            <svg viewBox="0 0 64 34" class="h-9 w-16" aria-hidden="true" fill="none" stroke-width="2">
+              {o.fill === -1 ? (
+                <>
+                  <rect x="4" y="6" width="44" height="18" stroke="#00BFFF" stroke-dasharray="3 3" />
+                  <text x="26" y="20" text-anchor="middle" font-family="Barlow Condensed,sans-serif" font-weight="800" font-size="14" fill="#FF5F00">?</text>
+                  <circle cx="18" cy="29" r="3" stroke="#00BFFF" /><circle cx="28" cy="29" r="3" stroke="#00BFFF" />
+                  <path d="M48 20h12" stroke="#00BFFF" />
+                </>
+              ) : o.fill === 0 ? (
+                <>
+                  <rect x="4" y="6" width="44" height="18" stroke="#00BFFF" />
+                  <rect x="20" y="13" width="12" height="11" fill="#FF5F00" />
+                  <circle cx="18" cy="29" r="3" stroke="#00BFFF" /><circle cx="28" cy="29" r="3" stroke="#00BFFF" />
+                  <path d="M48 20h12" stroke="#00BFFF" />
+                </>
+              ) : o.fill === 2 ? (
+                <>
+                  <rect x="2" y="9" width="26" height="15" fill="#FF5F00" stroke="#00BFFF" />
+                  <rect x="34" y="9" width="26" height="15" fill="#FF5F00" stroke="#00BFFF" />
+                  <circle cx="11" cy="29" r="3" stroke="#00BFFF" /><circle cx="19" cy="29" r="3" stroke="#00BFFF" />
+                  <circle cx="43" cy="29" r="3" stroke="#00BFFF" /><circle cx="51" cy="29" r="3" stroke="#00BFFF" />
+                </>
+              ) : (
+                <>
+                  <rect x="5" y={6 + 18 * (1 - o.fill)} width="42" height={18 * o.fill} fill="#FF5F00" />
+                  <rect x="4" y="6" width="44" height="18" stroke="#00BFFF" />
+                  <circle cx="18" cy="29" r="3" stroke="#00BFFF" /><circle cx="28" cy="29" r="3" stroke="#00BFFF" />
+                  <path d="M48 20h12" stroke="#00BFFF" />
+                </>
+              )}
+            </svg>
+            <span class="font-display text-[1.05rem] font-bold uppercase leading-none tracking-wide text-white">{o.label}</span>
+            <span class="text-xs leading-tight text-mute">{o.hint}</span>
+          </span>
+        </label>
+      ))
+    }
+  </div>
+  <p id={`${idPrefix}-load-err`} class="field-error" data-error-for={name}>Please pick the closest size — "Not sure" is fine.</p>
+</fieldset>

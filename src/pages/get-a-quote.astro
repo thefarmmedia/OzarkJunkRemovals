@@ -1,0 +1,73 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Breadcrumbs from '@/components/ui/Breadcrumbs.astro';
+import Icon from '@/components/ui/Icon.astro';
+import QuoteForm from '@/components/forms/QuoteForm.astro';
+import { site, telHref } from '@/config/site';
+import { services } from '@/data/services';
+import { cities } from '@/data/cities';
+
+const crumbs = [{ name: 'Get a Quote', href: '/get-a-quote/' }];
+const trail = [{ name: 'Home', href: '/' }, ...crumbs];
+// Allow ?service=<slug>&city=<slug> deep links from ads (read at build: none; handled client-side).
+const tips = [
+  { icon: 'camera', title: 'Add photos', text: 'Wide shots of the pile or room, plus close-ups of big items.' },
+  { icon: 'layers', title: 'Mention access', text: 'Stairs, long carries, tight doorways or a gate code.' },
+  { icon: 'alert', title: 'Flag heavy stuff', text: 'Concrete, shingles, dirt, pianos, safes or hot tubs.' },
+] as const;
+---
+
+<BaseLayout
+  title="Get a Free Junk Removal Quote | Springfield, MO | Ozark Junk Removals"
+  description="Request a free junk removal estimate in Springfield, MO and nearby towns. Tell us what needs to go, add photos, and we'll follow up with a straightforward estimate."
+  crumbs={crumbs}
+  hideMobileCta
+>
+  <section class="relative isolate overflow-hidden bg-ink pt-32 pb-20 sm:pt-36 lg:pt-40 lg:pb-28">
+    <div class="grid-bg absolute inset-0 -z-20" aria-hidden="true"></div>
+    <div class="absolute top-0 -left-40 -z-10 h-full w-[40%] -skew-x-12 bg-gradient-to-b from-orange/20 via-orange/5 to-transparent" aria-hidden="true"></div>
+
+    <div class="container-x grid gap-12 lg:grid-cols-[1fr_1.35fr] lg:items-start">
+      <div class="lg:sticky lg:top-32">
+        <div class="animate-rise"><Breadcrumbs trail={trail} /></div>
+        <p class="eyebrow animate-rise mt-8" style="--d:60ms">Free · No obligation</p>
+        <h1 class="display animate-rise mt-4 text-[3rem] leading-[0.88] sm:text-6xl lg:text-7xl" style="--d:120ms">Get your free <span class="text-orange">junk removal quote</span></h1>
+        <p class="animate-rise mt-5 max-w-lg text-lg text-[#d7dbe1]" style="--d:180ms">
+          Tell us what needs to go and where it is. We'll review your request and follow up with a straightforward estimate before any work is scheduled.
+        </p>
+
+        <ul class="animate-rise mt-9 space-y-4" style="--d:240ms">
+          {tips.map((t) => (
+            <li class="flex gap-4">
+              <span class="grid size-11 shrink-0 place-items-center bg-blue/10 text-blue ring-1 ring-blue/30"><Icon name={t.icon} size={22} /></span>
+              <span><span class="block font-display text-xl font-bold uppercase leading-tight">{t.title}</span><span class="text-mute">{t.text}</span></span>
+            </li>
+          ))}
+        </ul>
+
+        {
+          telHref && (
+            <a href={telHref} class="animate-rise mt-9 flex items-center gap-4 border border-white/10 bg-charcoal p-5 hover:border-blue" style="--d:300ms" data-track="call_click" data-cta="quote_page">
+              <Icon name="phone" size={28} class="text-orange" />
+              <span><span class="block text-sm text-mute">Rather talk it through?</span><span class="font-display text-2xl font-bold">{site.phone}</span></span>
+            </a>
+          )
+        }
+      </div>
+
+      <div class="animate-rise" style="--d:200ms">
+        <QuoteForm idPrefix="main" heading="Request your estimate" />
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script define:vars={{ slugs: services.map((s) => [s.slug, s.formLabel]), citySlugs: cities.map((c) => [c.slug, c.name]) }}>
+  // Pre-fill from ad / internal deep links: /get-a-quote/?service=garage-cleanouts&city=nixa
+  const params = new URLSearchParams(location.search);
+  const svc = Object.fromEntries(slugs)[params.get('service') || ''];
+  const city = Object.fromEntries(citySlugs)[params.get('city') || ''];
+  const f = document.querySelector('form[name="quote"]');
+  if (f && svc) f.querySelector('select[name="service"]').value = svc;
+  if (f && city) f.querySelector('select[name="city"]').value = city;
+</script>
