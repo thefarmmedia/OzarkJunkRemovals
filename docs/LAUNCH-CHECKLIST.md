@@ -38,12 +38,14 @@ Geography in `src/data/cities.ts` was written from general knowledge — please 
 - [ ] Springfield household-chemical note (City of Springfield's household chemical collection program — confirm it's still current)
 - [ ] **Flagged for expansion** (`status: 'expand'`): Battlefield, Willard, Rogersville, Strafford. These pages are useful but thinner. Before pushing them in ads or link-building, add: real job photos from that town, owner-written notes on local access/disposal, and town-specific FAQs from real customer questions.
 
-## 4b. Extended service area (42 generated town pages, 60-mile radius)
+## 4b. Extended service area (17 generated town pages — the 25 largest towns within 60 miles, incl. the 8 core)
 Data: `src/data/areas.ts` (towns, counties, ZIPs, coordinates, facts) + region copy in `src/data/cities.ts → regions`.
 - [ ] Confirm the business really serves the full 60-mile radius (and any minimum job size or trip scheduling for far towns — copy currently only says "a few days' notice helps")
 - [ ] Verify each town's county, ZIP code(s) and the one-line `fact` (county seats, lakes, highways, universities)
 - [ ] Distances are straight-line miles from Springfield, computed from approximate coordinates ("about X miles")
-- [ ] **Doorway-page risk:** these 42 pages share region-level copy. They are differentiated by region content, town facts, distance/direction and nearest-town links, but Google may still treat thin location pages as low value. Strengthen the most important ones first (Branson, Bolivar, Lebanon, Marshfield, Mount Vernon, Monett) with real job photos, owner-written notes and town-specific FAQs. Monitor indexing in Search Console; if many stay "Crawled – not indexed", improve or consolidate rather than add more.
+- [ ] Town selection used approximate 2020 Census populations — confirm the list matches where you want to rank.
+- [ ] 25 smaller towns were removed; their old URLs 301-redirect to the nearest remaining town (`netlify.toml`).
+- [ ] **Doorway-page risk:** these 17 pages share region-level copy. They are differentiated by region content, town facts, distance/direction and nearest-town links, but Google may still treat thin location pages as low value. Strengthen the most important ones first (Branson, Bolivar, Lebanon, Marshfield, Mount Vernon, Monett) with real job photos, owner-written notes and town-specific FAQs. Monitor indexing in Search Console; if many stay "Crawled – not indexed", improve or consolidate rather than add more.
 - [ ] To add/remove a town: edit `towns` in `src/data/areas.ts` — the page, sitemap entry, map pin, quote-form option and nearest-town links update automatically.
 
 ## 5. Photos (biggest visual upgrade available)

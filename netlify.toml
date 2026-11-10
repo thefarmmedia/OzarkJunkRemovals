@@ -48,3 +48,105 @@
   from = "/springfield"
   to = "/junk-removal-springfield-mo/"
   status = 301
+
+# Town pages removed when the service area was trimmed to the 25 largest towns → nearest remaining town (301).
+[[redirects]]
+  from = "/junk-removal-branson-west-mo"
+  to = "/junk-removal-kimberling-city-mo/"
+  status = 301
+[[redirects]]
+  from = "/junk-removal-reeds-spring-mo"
+  to = "/junk-removal-kimberling-city-mo/"
+  status = 301
+[[redirects]]
+  from = "/junk-removal-galena-mo"
+  to = "/junk-removal-kimberling-city-mo/"
+  status = 301
+[[redirects]]
+  from = "/junk-removal-rockaway-beach-mo"
+  to = "/junk-removal-forsyth-mo/"
+  status = 301
+[[redirects]]
+  from = "/junk-removal-merriam-woods-mo"
+  to = "/junk-removal-forsyth-mo/"
+  status = 301
+[[redirects]]
+  from = "/junk-removal-billings-mo"
+  to = "/junk-removal-clever-mo/"
+  status = 301
+[[redirects]]
+  from = "/junk-removal-highlandville-mo"
+  to = "/junk-removal-ozark-mo/"
+  status = 301
+[[redirects]]
+  from = "/junk-removal-fremont-hills-mo"
+  to = "/junk-removal-nixa-mo/"
+  status = 301
+[[redirects]]
+  from = "/junk-removal-fair-grove-mo"
+  to = "/junk-removal-strafford-mo/"
+  status = 301
+[[redirects]]
+  from = "/junk-removal-pleasant-hope-mo"
+  to = "/junk-removal-bolivar-mo/"
+  status = 301
+[[redirects]]
+  from = "/junk-removal-morrisville-mo"
+  to = "/junk-removal-bolivar-mo/"
+  status = 301
+[[redirects]]
+  from = "/junk-removal-humansville-mo"
+  to = "/junk-removal-bolivar-mo/"
+  status = 301
+[[redirects]]
+  from = "/junk-removal-walnut-grove-mo"
+  to = "/junk-removal-willard-mo/"
+  status = 301
+[[redirects]]
+  from = "/junk-removal-ash-grove-mo"
+  to = "/junk-removal-willard-mo/"
+  status = 301
+[[redirects]]
+  from = "/junk-removal-miller-mo"
+  to = "/junk-removal-mount-vernon-mo/"
+  status = 301
+[[redirects]]
+  from = "/junk-removal-pierce-city-mo"
+  to = "/junk-removal-monett-mo/"
+  status = 301
+[[redirects]]
+  from = "/junk-removal-crane-mo"
+  to = "/junk-removal-marionville-mo/"
+  status = 301
+[[redirects]]
+  from = "/junk-removal-greenfield-mo"
+  to = "/junk-removal-mount-vernon-mo/"
+  status = 301
+[[redirects]]
+  from = "/junk-removal-lockwood-mo"
+  to = "/junk-removal-mount-vernon-mo/"
+  status = 301
+[[redirects]]
+  from = "/junk-removal-stockton-mo"
+  to = "/junk-removal-bolivar-mo/"
+  status = 301
+[[redirects]]
+  from = "/junk-removal-fordland-mo"
+  to = "/junk-removal-rogersville-mo/"
+  status = 301
+[[redirects]]
+  from = "/junk-removal-niangua-mo"
+  to = "/junk-removal-marshfield-mo/"
+  status = 301
+[[redirects]]
+  from = "/junk-removal-conway-mo"
+  to = "/junk-removal-marshfield-mo/"
+  status = 301
+[[redirects]]
+  from = "/junk-removal-mansfield-mo"
+  to = "/junk-removal-seymour-mo/"
+  status = 301
+[[redirects]]
+  from = "/junk-removal-hartville-mo"
+  to = "/junk-removal-seymour-mo/"
+  status = 301

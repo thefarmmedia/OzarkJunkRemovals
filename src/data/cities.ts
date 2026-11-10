@@ -431,7 +431,7 @@ export const regions: Record<Exclude<RegionKey, 'core'>, RegionContent> = {
   },
   north: {
     label: 'North of Springfield',
-    blurb: 'Northern Greene, Polk and Dallas Counties — small towns, farms and rural acreage.',
+    blurb: 'Polk and Dallas Counties — county-seat towns, farms and rural acreage north of Springfield.',
     intros: [
       'North of Springfield, towns like {town} mix in-town homes with farms and rural acreage. That usually means more than one area to clear — a house, a garage, a barn, a fence line. We can take it all in one planned visit or schedule multiple loads.',
       '{town} homeowners and landowners call us for the jobs that are too big for a pickup truck: whole-house cleanouts, outbuildings, old appliances and scrap piles. Our crew brings the trailer and does the loading.',
@@ -449,7 +449,7 @@ export const regions: Record<Exclude<RegionKey, 'core'>, RegionContent> = {
   },
   west: {
     label: 'West of Springfield',
-    blurb: 'Lawrence, Barry, Dade and Cedar Counties — small towns along I-44, US-60 and beyond.',
+    blurb: 'Lawrence and Barry Counties — towns along I-44 and US-60 out to Cassville.',
     intros: [
       "{town} is one of the small towns west of Springfield where many homes come with basements, detached garages and outbuildings. When it's time to clear them out, we bring the crew and the trailer.",
       "Junk removal in {town} doesn't have to mean renting a trailer and making three trips yourself. Tell us what needs to go, and our Springfield-based crew loads it and hauls it away.",
@@ -467,7 +467,7 @@ export const regions: Record<Exclude<RegionKey, 'core'>, RegionContent> = {
   },
   east: {
     label: 'East of Springfield',
-    blurb: 'Webster, Laclede, Wright and Douglas Counties — farms, acreage and small towns.',
+    blurb: 'Webster, Laclede and Douglas Counties — Marshfield, Seymour, Lebanon and Ava.',
     intros: [
       'East of Springfield, {town} and the surrounding countryside have plenty of farms, acreage and older homes. We handle the big cleanouts — houses, barns, sheds — and single bulky items too.',
       'Need junk gone in {town}? Our crew comes out from Springfield, loads everything from wherever it sits and hauls it off — no trailer rental, no borrowed truck, no weekend lost.',
