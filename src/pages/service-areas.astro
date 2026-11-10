@@ -21,7 +21,7 @@ const regionColor: Record<string, string> = {
 };
 const labeled = new Set([
   'branson', 'forsyth', 'bolivar', 'buffalo', 'mount-vernon', 'monett', 'cassville', 'aurora',
-  'marshfield', 'seymour', 'lebanon', 'ava', 'sparta', 'nixa', 'willard',
+  'marshfield', 'seymour', 'lebanon', 'ava', 'sparta', 'nixa', 'willard', 'stockton', 'ash-grove',
 ]);
 const groups = [
   { key: 'core', label: 'Springfield & core area', blurb: 'Home base and the towns right around it — our most frequent stops.', list: coreAreaCities },
@@ -37,7 +37,7 @@ const groups = [
   <PageHero
     eyebrow={`${cities.length} towns · ${SERVICE_RADIUS_MILES}-mile radius`}
     title="Junk removal across Springfield & the Ozarks"
-    lead={`Springfield is home base. We serve ${cities.length} communities within about ${SERVICE_RADIUS_MILES} miles — north to Bolivar and Buffalo, south to Branson and Table Rock Lake, west to Monett and Cassville, and east to Lebanon and Ava. If your town isn't listed, send a request anyway and we'll tell you honestly whether we can get there.`}
+    lead={`Springfield is home base. We serve ${cities.length} communities within about ${SERVICE_RADIUS_MILES} miles — north to Bolivar and Buffalo, south to Branson and Table Rock Lake, west to Monett, Cassville and Stockton, and east to Lebanon and Ava. If your town isn't listed, send a request anyway and we'll tell you honestly whether we can get there.`}
     crumbs={crumbs}
   />
 

@@ -68,6 +68,10 @@ export const towns: TownSeed[] = [
     angle: 'a county-seat town and surrounding farm country on US-65',
     about: "Buffalo is the Dallas County seat, on US-65 north of Springfield, with a courthouse square surrounded by established neighborhoods and farm country. We help with household junk, estate cleanouts and the outbuilding cleanups that come with rural property." },
 
+  { slug: 'ash-grove', name: 'Ash Grove', county: 'Greene County', zips: ['65604'], lat: 37.315, lon: -93.585, region: 'north',
+    angle: 'small-town homes and farms in western Greene County',
+    about: "Ash Grove is a small city in western Greene County, near the Nathan Boone Homestead State Historic Site. In-town homes, older farmhouses and rural acreage all fall within an easy run for our crew." },
+
   // ── West of Springfield ────────────────────────────────────────────────
   { slug: 'mount-vernon', name: 'Mount Vernon', county: 'Lawrence County', zips: ['65712'], lat: 37.104, lon: -93.819, region: 'west',
     angle: 'in-town homes, rentals and rural properties on I-44',
@@ -84,6 +88,10 @@ export const towns: TownSeed[] = [
   { slug: 'cassville', name: 'Cassville', county: 'Barry County', zips: ['65625'], lat: 36.677, lon: -93.869, region: 'west',
     angle: 'homes, cabins and lake properties near Roaring River',
     about: "Cassville is the Barry County seat, near Roaring River State Park and the western reaches of Table Rock Lake. Homes in town, rural acreage, cabins and lake properties are all within reach of our crew — just give us a few days' notice for the drive." },
+
+  { slug: 'stockton', name: 'Stockton', county: 'Cedar County', zips: ['65785'], lat: 37.699, lon: -93.796, region: 'west',
+    angle: 'lake cabins, seasonal homes and rural properties on Stockton Lake',
+    about: "Stockton is the Cedar County seat, on the shores of Stockton Lake — a popular lake for sailing and fishing. Lake cabins, seasonal homes and rural properties are common around town, and many need a reset after years of use." },
 
   // ── East of Springfield ────────────────────────────────────────────────
   { slug: 'marshfield', name: 'Marshfield', county: 'Webster County', zips: ['65706'], lat: 37.339, lon: -92.907, region: 'east',

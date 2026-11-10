@@ -431,7 +431,7 @@ export const regions: Record<Exclude<RegionKey, 'core'>, RegionContent> = {
   },
   north: {
     label: 'North of Springfield',
-    blurb: 'Polk and Dallas Counties — county-seat towns, farms and rural acreage north of Springfield.',
+    blurb: 'Western Greene, Polk and Dallas Counties — small towns, farms and rural acreage north of Springfield.',
     intros: [
       'North of Springfield, towns like {town} mix in-town homes with farms and rural acreage. That usually means more than one area to clear — a house, a garage, a barn, a fence line. We can take it all in one planned visit or schedule multiple loads.',
       '{town} homeowners and landowners call us for the jobs that are too big for a pickup truck: whole-house cleanouts, outbuildings, old appliances and scrap piles. Our crew brings the trailer and does the loading.',
@@ -449,7 +449,7 @@ export const regions: Record<Exclude<RegionKey, 'core'>, RegionContent> = {
   },
   west: {
     label: 'West of Springfield',
-    blurb: 'Lawrence and Barry Counties — towns along I-44 and US-60 out to Cassville.',
+    blurb: 'Lawrence, Barry and Cedar Counties — towns along I-44 and US-60, out to Cassville and Stockton Lake.',
     intros: [
       "{town} is one of the small towns west of Springfield where many homes come with basements, detached garages and outbuildings. When it's time to clear them out, we bring the crew and the trailer.",
       "Junk removal in {town} doesn't have to mean renting a trailer and making three trips yourself. Tell us what needs to go, and our Springfield-based crew loads it and hauls it away.",
