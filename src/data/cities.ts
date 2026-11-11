@@ -54,7 +54,7 @@ const coreCities: City[] = [
     status: 'ready',
     primary: true,
     seo: {
-      title: 'Local Junk Removal Across Springfield, MO | Ozark Junk Removals',
+      title: 'Junk Removal Across Springfield, MO | Ozark Junk Removals',
       description:
         'Local junk removal in every Springfield, MO neighborhood. Furniture, appliances, garage and estate cleanouts and debris — we load it and haul it.',
     },

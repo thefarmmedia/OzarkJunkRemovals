@@ -15,6 +15,7 @@ export default defineConfig({
   integrations: [
     sitemap({
       filter: (page) => !/\/(thank-you|404)\/?$/.test(page),
+      lastmod: new Date(),
     }),
   ],
   vite: { plugins: [tailwindcss()] },

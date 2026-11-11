@@ -36,7 +36,7 @@ const crumbs = [
   title={c.seo.title}
   description={c.seo.description}
   crumbs={crumbs}
-  schema={[serviceSchema(origin, { name: `Junk removal in ${c.name}, MO`, description: c.seo.description, path, area: `${c.name}, MO` }), faqPage(faqs)]}
+  schema={[serviceSchema(origin, { name: `Junk removal in ${c.name}, MO`, description: c.seo.description, path, area: `${c.name}, MO`, lat: c.lat, lon: c.lon }), faqPage(faqs)]}
 >
   <PageHero eyebrow={`${c.county} · ${c.relation}`} title={c.h1} lead={c.lead} crumbs={crumbs} hasAside>
     <div slot="aside" class="card border-blue/25 p-6 sm:p-8">

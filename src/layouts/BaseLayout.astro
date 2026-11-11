@@ -6,7 +6,7 @@ import MobileCtaBar from '@/components/layout/MobileCtaBar.astro';
 import Tracking from '@/components/seo/Tracking.astro';
 import ConsentBanner from '@/components/seo/ConsentBanner.astro';
 import { site } from '@/config/site';
-import { localBusiness, website, breadcrumbs as crumbSchema, graph } from '@/lib/schema';
+import { localBusiness, website, webPage, breadcrumbs as crumbSchema, graph } from '@/lib/schema';
 
 export interface Crumb {
   name: string;
@@ -26,6 +26,8 @@ interface Props {
   crumbs?: Crumb[];
   /** Hide the sticky mobile CTA (e.g. on the quote page itself). */
   hideMobileCta?: boolean;
+  /** schema.org page type (WebPage, AboutPage, ContactPage, CollectionPage…). */
+  pageType?: string;
 }
 
 const {
@@ -37,7 +39,10 @@ const {
   schema = [],
   crumbs,
   hideMobileCta = false,
+  pageType = 'WebPage',
 } = Astro.props;
+const gscVerification = import.meta.env.PUBLIC_GSC_VERIFICATION?.trim();
+const bingVerification = import.meta.env.PUBLIC_BING_VERIFICATION?.trim();
 
 const origin = Astro.site?.origin ?? Astro.url.origin;
 const canonical = new URL(canonicalPath, origin).href;
@@ -47,6 +52,7 @@ const trail = crumbs ? [{ name: 'Home', href: '/' }, ...crumbs] : null;
 const jsonLd = graph([
   localBusiness(origin),
   website(origin),
+  ...(noindex ? [] : [webPage(origin, { path: canonicalPath, title, description, hasBreadcrumb: !!trail, type: pageType })]),
   ...(trail ? [crumbSchema(origin, trail)] : []),
   ...schema,
 ]);
@@ -61,12 +67,18 @@ const jsonLd = graph([
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
-    {noindex && <meta name="robots" content="noindex, follow" />}
+    <meta name="robots" content={noindex ? 'noindex, follow' : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'} />
+    {gscVerification && <meta name="google-site-verification" content={gscVerification} />}
+    {bingVerification && <meta name="msvalidate.01" content={bingVerification} />}
+    <meta name="geo.region" content="US-MO" />
+    <meta name="geo.placename" content="Springfield, Missouri" />
     <meta name="theme-color" content="#0B0D10" />
 
     <link rel="icon" href="/favicon.ico" sizes="48x48" />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
+    <link rel="icon" href="/favicon-16.png" type="image/png" sizes="16x16" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
+    <link rel="alternate" type="text/plain" href="/llms.txt" title="LLM-friendly site summary" />
     <link rel="manifest" href="/site.webmanifest" />
     <link rel="sitemap" href="/sitemap-index.xml" />
 

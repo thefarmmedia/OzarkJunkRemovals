@@ -10,6 +10,8 @@ interface ImportMetaEnv {
   readonly PUBLIC_GOOGLE_ADS_LEAD_LABEL?: string;
   readonly PUBLIC_META_PIXEL_ID?: string;
   readonly PUBLIC_CALL_TRACKING_SCRIPT?: string;
+  readonly PUBLIC_GSC_VERIFICATION?: string;
+  readonly PUBLIC_BING_VERIFICATION?: string;
 }
 
 interface ImportMeta {
