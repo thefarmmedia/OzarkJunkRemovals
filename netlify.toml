@@ -5,6 +5,11 @@
 [build.environment]
   NODE_VERSION = "24"
 
+# netlify/functions/submission-created.mjs forwards verified form submissions
+# to the CRM webhook set in the GHL_WEBHOOK_URL environment variable.
+[functions]
+  directory = "netlify/functions"
+
 # Long-term caching for fingerprinted build assets.
 [[headers]]
   for = "/_astro/*"

@@ -60,6 +60,7 @@ The site uses a custom technical illustration and clearly-labelled placeholders 
 - [ ] Add real reviews (verbatim, with permission/source link) to `src/data/reviews.ts`. Do **not** add rating schema.
 
 ## 7. Netlify & tracking
+- [ ] Set **`GHL_WEBHOOK_URL`** (GoHighLevel inbound webhook) in Netlify env vars, redeploy, submit a test lead, then map the fields in the GHL webhook trigger (see README → Lead forms)
 - [ ] Connect repo, deploy, set env vars (see README)
 - [ ] Confirm both forms detected; set up email notifications
 - [ ] **Live test:** submit both forms with a photo on the deployed site; confirm data + attachment arrive

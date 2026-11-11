@@ -111,7 +111,7 @@ for (const file of html) {
   if (!/property="og:image"/.test(src)) errors.push(`${route}: missing og:image`);
 }
 
-for (const f of ['quote', 'garage-sale-pickup']) if (!forms.has(f)) errors.push(`Netlify form "${f}" not found in static HTML`);
+for (const f of ['quote', 'garage-sale-pickup', 'estimate']) if (!forms.has(f)) errors.push(`Netlify form "${f}" not found in static HTML`);
 for (const f of ['robots.txt', 'sitemap-index.xml', '404.html']) if (!existsSync(join(DIST, f))) errors.push(`missing ${f}`);
 
 const sitemap = existsSync(join(DIST, 'sitemap-0.xml')) ? readFileSync(join(DIST, 'sitemap-0.xml'), 'utf8') : '';

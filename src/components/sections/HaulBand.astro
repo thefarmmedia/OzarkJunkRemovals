@@ -1,0 +1,46 @@
+---
+/**
+ * "You point. We load." band — gives the animated trailer drawing its own stage
+ * below the hero. The drawing plays when it scrolls into view ([data-play-on-view]).
+ */
+import HeroVisual from './HeroVisual.astro';
+import Icon from '@/components/ui/Icon.astro';
+
+const points = [
+  { icon: 'lift', text: 'Carried out from any room — basements, attics, back yards' },
+  { icon: 'trailer', text: 'Dump trailer + high-side trailer for bulky and heavy loads' },
+  { icon: 'clipboard', text: 'Straightforward estimate before anything gets loaded' },
+] as const;
+---
+
+<section class="relative isolate overflow-hidden bg-ink py-20 lg:py-28" aria-labelledby="haul-title">
+  <div class="grid-bg absolute inset-0 -z-20 opacity-70" aria-hidden="true"></div>
+  <div class="container-x grid items-center gap-12 lg:grid-cols-[1fr_1.1fr]">
+    <div class="reveal">
+      <p class="eyebrow mb-4">Full-service hauling</p>
+      <h2 id="haul-title" class="display text-[2.6rem] leading-[0.92] sm:text-5xl lg:text-[4rem]">You point.<br /><span class="text-orange">We load it all.</span></h2>
+      <p class="mt-5 max-w-lg text-lg text-mute">No trailer rental, no borrowed truck, no dumpster sitting in your driveway. Our crew shows up, does the lifting and hauls it away.</p>
+      <ul class="mt-8 space-y-4">
+        {points.map((p) => (
+          <li class="flex items-center gap-4">
+            <span class="grid size-11 shrink-0 place-items-center bg-blue/10 text-blue ring-1 ring-blue/30"><Icon name={p.icon} size={22} /></span>
+            <span class="text-[1.02rem]">{p.text}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+
+    <div class="relative" data-play-on-view>
+      <div class="m-slab absolute -inset-x-6 -top-8 -bottom-10 -z-10 bg-gradient-to-br from-orange via-[#ff4d00] to-[#c43d00] lg:-inset-x-10" aria-hidden="true"></div>
+      <div class="m-stripe absolute -inset-x-6 -top-10 h-1.5 -z-10 bg-blue shadow-[0_0_20px_rgb(0_191_255/0.7)] lg:-inset-x-10" aria-hidden="true"></div>
+      <HeroVisual />
+    </div>
+  </div>
+</section>
+
+<style>
+  .m-slab { transform: skewY(-6deg); animation: m-slab-in 1s var(--ease-out-quint) 0.1s both; }
+  .m-stripe { transform: skewY(-6deg); transform-origin: right; animation: m-stripe-in 0.9s var(--ease-out-quint) 0.4s both; }
+  @keyframes m-slab-in { from { transform: translateX(105%) skewY(-6deg); } to { transform: skewY(-6deg); } }
+  @keyframes m-stripe-in { from { transform: skewY(-6deg) scaleX(0); } to { transform: skewY(-6deg) scaleX(1); } }
+</style>

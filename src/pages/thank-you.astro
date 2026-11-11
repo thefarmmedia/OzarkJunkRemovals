@@ -46,6 +46,10 @@ import { services } from '@/data/services';
 
 <script>
   const params = new URLSearchParams(location.search);
+  if (params.get('form') === 'estimate') {
+    const msg = document.getElementById('ty-msg');
+    if (msg) msg.innerHTML = "Thanks! We got your estimate request and will reach out shortly. Want a more accurate estimate? <a href='/get-a-quote/' class='text-blue underline'>Send photos with the full quote form</a>.";
+  }
   if (params.get('form') === 'garage-sale-pickup') {
     const msg = document.getElementById('ty-msg');
     if (msg) msg.textContent = "Thanks! We got your garage-sale pickup request. We'll confirm eligibility, timing and what we can take — before your sale ends whenever possible.";

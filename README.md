@@ -57,10 +57,11 @@ Short URLs for yard signs (configured in `netlify.toml`): `/sign` and `/yard-sig
 
 ## Lead forms
 
-Two Netlify Forms, both detected from the static HTML at build time:
+Three Netlify Forms, all detected from the static HTML at build time:
 
 | Form name | Where | Notes |
 | --- | --- | --- |
+| `estimate` | Homepage hero | Short form: service, name, phone, ZIP, optional email/notes |
 | `quote` | `/get-a-quote/`, every service page, every city page | 3 steps, load-size picker, up to 3 photos |
 | `garage-sale-pickup` | `/garage-sale-junk-pickup/` | 2 steps, sale end date, item types, up to 3 photos |
 
@@ -71,7 +72,9 @@ How it works:
 - **Attribution:** hidden fields capture page URL and first-touch `utm_source/medium/campaign`, `gclid`, `fbclid`.
 - **Tracking events** (pushed to `dataLayer`; forwarded to GA4/Ads/Meta when configured): `form_start`, `form_step`, `generate_lead`, `lead_thank_you_view`, `cta_click`, `call_click`.
 
-**After the first deploy:** in Netlify → *Forms*, confirm both forms are detected, then set up email notifications (Forms → Form notifications) to the owner's inbox/phone.
+**CRM (GoHighLevel):** `netlify/functions/submission-created.mjs` runs on every verified (non-spam) submission and POSTs a flat JSON lead (first/last name, E.164 phone, email, ZIP, service, details, photo URLs, UTM/gclid, `source`, `tags`) to the webhook in the **`GHL_WEBHOOK_URL`** env var. The repo is public, so the URL lives only in Netlify's environment variables. Without it, submissions still save in Netlify Forms.
+
+**After the first deploy:** in Netlify → *Forms*, confirm all three forms are detected, then set up email notifications (Forms → Form notifications) to the owner's inbox/phone.
 
 ---
 

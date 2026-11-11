@@ -2,6 +2,7 @@
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import HomeHero from '@/components/sections/HomeHero.astro';
 import TrustStrip from '@/components/sections/TrustStrip.astro';
+import HaulBand from '@/components/sections/HaulBand.astro';
 import HowItWorks from '@/components/sections/HowItWorks.astro';
 import BeforeAfterGallery from '@/components/sections/BeforeAfterGallery.astro';
 import GarageSalePromo from '@/components/sections/GarageSalePromo.astro';
@@ -31,6 +32,7 @@ const haul = [
 <BaseLayout title={seo.title} description={seo.description} schema={[faqPage(homeFaqs)]}>
   <HomeHero />
   <TrustStrip />
+  <HaulBand />
 
   <!-- SERVICES -->
   <section id="services" class="relative bg-ink py-20 lg:py-28" aria-labelledby="services-title">

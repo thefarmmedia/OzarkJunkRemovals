@@ -1,0 +1,125 @@
+---
+/**
+ * Compact "Request an estimate" form for the homepage hero — Netlify Forms
+ * (name="estimate"). Same behaviour/validation as the other lead forms
+ * (src/scripts/lead-form.ts). Submissions are forwarded to the CRM webhook by
+ * netlify/functions/submission-created.mjs.
+ */
+import Icon from '@/components/ui/Icon.astro';
+import { services } from '@/data/services';
+import { site } from '@/config/site';
+
+const id = (s: string) => `est-${s}`;
+---
+
+<div class="est-wrap relative">
+  <form
+    name="estimate"
+    method="POST"
+    action="/thank-you/"
+    data-netlify="true"
+    netlify-honeypot="company_website"
+    data-lead-form="estimate"
+    class="lead-form relative bg-[#121418]/95 p-5 backdrop-blur-sm sm:p-7"
+    novalidate
+  >
+    <input type="hidden" name="form-name" value="estimate" />
+    <input type="hidden" name="page_url" value="" data-fill="page_url" />
+    <input type="hidden" name="utm_source" value="" data-fill="utm_source" />
+    <input type="hidden" name="utm_medium" value="" data-fill="utm_medium" />
+    <input type="hidden" name="utm_campaign" value="" data-fill="utm_campaign" />
+    <input type="hidden" name="gclid" value="" data-fill="gclid" />
+    <input type="hidden" name="fbclid" value="" data-fill="fbclid" />
+    <p class="hidden" aria-hidden="true"><label>Leave this empty: <input name="company_website" tabindex="-1" autocomplete="off" /></label></p>
+
+    <div class="flex items-start justify-between gap-3">
+      <div>
+        <p class="font-display text-sm font-bold uppercase tracking-[0.2em] text-blue">Free · No obligation</p>
+        <h2 class="display mt-1 text-[2rem] leading-none sm:text-[2.3rem]">Request an <span class="text-orange">estimate</span></h2>
+      </div>
+      <span class="mt-1 hidden shrink-0 items-center gap-1.5 rounded-full bg-orange/10 px-3 py-1 text-xs font-bold text-orange ring-1 ring-orange/30 sm:inline-flex">
+        <Icon name="clock" size={14} /> 30 sec
+      </span>
+    </div>
+
+    <fieldset class="form-step mt-5 space-y-4" data-step="0">
+      <legend class="sr-only">Request an estimate</legend>
+      <div>
+        <label for={id('service')} class="field-label">What needs to go?<span class="req" aria-hidden="true">*</span></label>
+        <select id={id('service')} name="service" class="input" required aria-describedby={id('service-err')}>
+          <option value="">Choose one…</option>
+          {services.map((s) => <option value={s.formLabel}>{s.formLabel}</option>)}
+          <option value="Garage sale leftover pickup">Garage sale leftover pickup</option>
+          <option value="Not sure / other">Not sure / other</option>
+        </select>
+        <p id={id('service-err')} class="field-error" data-error-for="service">Pick the closest option.</p>
+      </div>
+      <div class="grid gap-4 sm:grid-cols-2">
+        <div>
+          <label for={id('name')} class="field-label">Name<span class="req" aria-hidden="true">*</span></label>
+          <input id={id('name')} name="name" class="input" autocomplete="name" required maxlength="100" aria-describedby={id('name-err')} />
+          <p id={id('name-err')} class="field-error" data-error-for="name">Enter your name.</p>
+        </div>
+        <div>
+          <label for={id('phone')} class="field-label">Phone<span class="req" aria-hidden="true">*</span></label>
+          <input id={id('phone')} name="phone" type="tel" class="input" autocomplete="tel" inputmode="tel" required pattern="[\d\s\-\(\)\+\.]{10,20}" aria-describedby={id('phone-err')} />
+          <p id={id('phone-err')} class="field-error" data-error-for="phone">Enter a 10-digit phone number.</p>
+        </div>
+      </div>
+      <div class="grid gap-4 sm:grid-cols-[0.8fr_1.2fr]">
+        <div>
+          <label for={id('zip')} class="field-label">ZIP<span class="req" aria-hidden="true">*</span></label>
+          <input id={id('zip')} name="zip" class="input" inputmode="numeric" autocomplete="postal-code" pattern="[0-9]{5}" maxlength="5" required placeholder="65802" aria-describedby={id('zip-err')} />
+          <p id={id('zip-err')} class="field-error" data-error-for="zip">5-digit ZIP.</p>
+        </div>
+        <div>
+          <label for={id('email')} class="field-label">Email <span class="font-normal text-mute">(optional)</span></label>
+          <input id={id('email')} name="email" type="email" class="input" autocomplete="email" maxlength="150" aria-describedby={id('email-err')} />
+          <p id={id('email-err')} class="field-error" data-error-for="email">Check the email address.</p>
+        </div>
+      </div>
+      <div>
+        <label for={id('desc')} class="field-label">Anything we should know? <span class="font-normal text-mute">(optional)</span></label>
+        <textarea id={id('desc')} name="description" class="input !min-h-[4.5rem]" rows="2" maxlength="1500" placeholder="e.g. Old couch and fridge in the basement"></textarea>
+      </div>
+      <div>
+        <label class="flex cursor-pointer items-start gap-2.5 text-[0.85rem] leading-snug text-[#cfd3d9]">
+          <input type="checkbox" name="contact_consent" value="yes" required class="mt-0.5 size-[1.1rem] shrink-0 accent-orange" aria-describedby={id('consent-err')} />
+          <span>{site.name} may call, text or email me about this request. Msg &amp; data rates may apply. <a href="/privacy/" class="text-blue underline">Privacy</a></span>
+        </label>
+        <p id={id('consent-err')} class="field-error" data-error-for="contact_consent">Please confirm we can contact you.</p>
+      </div>
+    </fieldset>
+
+    <div class="form-alert mt-4 hidden rounded border border-[#ff6b6b]/50 bg-[#ff6b6b]/10 p-3 text-sm" role="alert" tabindex="-1">
+      <p class="font-bold">Sorry — that didn't go through. Please try again{site.phone ? ` or call ${site.phone}` : ''}.</p>
+    </div>
+
+    <button type="submit" class="form-submit btn btn-primary btn-lg mt-5 w-full">
+      <span class="submit-label">Get My Free Estimate</span>
+      <span class="submit-loading hidden items-center gap-2"><span class="spinner" aria-hidden="true"></span> Sending…</span>
+      <Icon name="arrow" size={20} class="arrow submit-arrow" />
+    </button>
+    <p class="mt-3 text-center text-xs text-mute">Have photos? You can send them after — or use the <a href="/get-a-quote/" class="text-blue underline">full quote form</a>.</p>
+  </form>
+</div>
+
+<style>
+  /* Animated electric border: a conic gradient spins behind the card edge. */
+  @property --est-angle { syntax: '<angle>'; initial-value: 0deg; inherits: false; }
+  .est-wrap {
+    padding: 2px;
+    background: conic-gradient(from var(--est-angle), #00bfff 0deg, transparent 70deg, transparent 180deg, #ff5f00 230deg, transparent 300deg, #00bfff 360deg);
+    clip-path: polygon(0 0, calc(100% - 22px) 0, 100% 22px, 100% 100%, 22px 100%, 0 calc(100% - 22px));
+    animation: est-spin 6s linear infinite;
+    box-shadow: 0 30px 80px -30px rgb(0 0 0 / 0.9);
+  }
+  .est-wrap > form { clip-path: polygon(0 0, calc(100% - 21px) 0, 100% 21px, 100% 100%, 21px 100%, 0 calc(100% - 21px)); }
+  @keyframes est-spin { to { --est-angle: 360deg; } }
+  @media (prefers-reduced-motion: reduce) { .est-wrap { animation: none; } }
+</style>
+
+<script>
+  import { initLeadForms } from '@/scripts/lead-form';
+  initLeadForms();
+</script>
