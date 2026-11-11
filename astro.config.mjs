@@ -3,10 +3,9 @@ import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 
-// The canonical origin. Set SITE_URL in Netlify to the production domain once it is
-// purchased (e.g. https://www.yourdomain.com). Netlify's own URL env var is the fallback,
-// so preview deploys still get valid absolute URLs. Never hard-code a guessed domain here.
-const site = (process.env.SITE_URL || process.env.URL || 'http://localhost:4321').replace(/\/$/, '');
+// The canonical origin: SITE_URL if set, else Netlify's primary-domain URL, else the
+// production domain (so local builds also produce correct canonicals).
+const site = (process.env.SITE_URL || process.env.URL || 'https://ozarkjunkremovals.com').replace(/\/$/, '');
 
 export default defineConfig({
   site,

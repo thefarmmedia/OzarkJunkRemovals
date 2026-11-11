@@ -24,6 +24,13 @@
     X-Frame-Options = "SAMEORIGIN"
     Permissions-Policy = "camera=(), microphone=(), geolocation=()"
 
+# Old Netlify subdomain → custom domain (deploy previews use other subdomains and are unaffected).
+[[redirects]]
+  from = "https://ozarkjunkremovals.netlify.app/*"
+  to = "https://ozarkjunkremovals.com/:splat"
+  status = 301
+  force = true
+
 # Friendly short URLs → canonical pages (301).
 [[redirects]]
   from = "/quote"
