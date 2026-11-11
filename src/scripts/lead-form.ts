@@ -300,15 +300,40 @@ function initForm(form: HTMLFormElement) {
     if (honeypot?.value) { location.href = thanks; return; }
 
     setLoading(form, true);
-    try {
-      const body = new FormData(form);
-      // Don't send empty photo slots as zero-byte files.
-      for (const [k, v] of [...body.entries()]) if (v instanceof File && v.size === 0) body.delete(k);
-      const res = await fetch('/', { method: 'POST', body });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      window.ozTrack?.('generate_lead', { form_name: form.dataset.leadForm, service: (form.elements.namedItem('service') as HTMLSelectElement | null)?.value });
+    const body = new FormData(form);
+    // Don't send empty photo slots as zero-byte files.
+    for (const [k, v] of [...body.entries()]) if (v instanceof File && v.size === 0) body.delete(k);
+
+    const succeed = (route: string) => {
+      window.ozTrack?.('generate_lead', { form_name: form.dataset.leadForm, route, service: (form.elements.namedItem('service') as HTMLSelectElement | null)?.value });
       try { sessionStorage.setItem('oz-submitted', form.dataset.leadForm || 'form'); } catch {}
       location.href = thanks;
+    };
+
+    // 1) Netlify Forms (stores the submission + photos, then forwards to the CRM).
+    try {
+      const res = await fetch('/', { method: 'POST', body });
+      if (res.ok) return succeed('netlify_forms');
+      console.warn(`Netlify Forms returned HTTP ${res.status}; trying backup route`);
+    } catch (err) {
+      console.warn('Netlify Forms request failed; trying backup route', err);
+    }
+
+    // 2) Backup: send the text fields straight to the CRM via a Netlify function.
+    try {
+      const json: Record<string, string | string[]> = {};
+      for (const [k, v] of body.entries()) {
+        if (v instanceof File) continue;
+        const prev = json[k];
+        json[k] = prev === undefined ? v : Array.isArray(prev) ? [...prev, v] : [prev, v];
+      }
+      const res = await fetch('/.netlify/functions/lead', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(json),
+      });
+      if (res.ok) return succeed('backup_function');
+      throw new Error(`Backup HTTP ${res.status}`);
     } catch (err) {
       console.warn('Form submission failed', err);
       setLoading(form, false);
