@@ -88,10 +88,6 @@
   to = "/junk-removal-nixa-mo/"
   status = 301
 [[redirects]]
-  from = "/junk-removal-fair-grove-mo"
-  to = "/junk-removal-strafford-mo/"
-  status = 301
-[[redirects]]
   from = "/junk-removal-pleasant-hope-mo"
   to = "/junk-removal-bolivar-mo/"
   status = 301

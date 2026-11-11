@@ -61,6 +61,9 @@ export const towns: TownSeed[] = [
     about: "Clever is a small, growing Christian County city southwest of Springfield, between Republic and Billings. New subdivisions have joined the older homes and farms around town, which means plenty of garage cleanouts, furniture swaps and leftover building materials to haul." },
 
   // ── North of Springfield ───────────────────────────────────────────────
+  { slug: 'fair-grove', name: 'Fair Grove', county: 'Greene County', zips: ['65648'], lat: 37.384, lon: -93.151, region: 'north',
+    angle: 'homes with acreage and outbuildings northeast of Springfield',
+    about: "Fair Grove is a small Greene County city northeast of Springfield, known for the historic Wommack Mill and its annual heritage reunion. Homes in and around town often come with acreage, shops and outbuildings — great for hobbies, and great at collecting junk." },
   { slug: 'bolivar', name: 'Bolivar', county: 'Polk County', zips: ['65613'], lat: 37.614, lon: -93.41, region: 'north',
     angle: 'homes, student rentals and businesses around the square',
     about: "Bolivar is the Polk County seat, north of Springfield on US-13, with a historic downtown square, Southwest Baptist University and Citizens Memorial Hospital. Rentals turn over with the school year, so landlords use us for tenant leave-behinds — alongside the usual household and estate cleanouts." },

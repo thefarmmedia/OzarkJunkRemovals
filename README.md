@@ -4,7 +4,7 @@ Lead-generation website for **Ozark Junk Removals**, a junk removal & hauling co
 
 - **Stack:** Astro 7 (static output) · TypeScript · Tailwind CSS v4 · Netlify Forms · Netlify hosting
 - **JavaScript shipped:** only small vanilla scripts (menu, form steps/uploader, reveal-on-scroll, before/after slider). No framework runtime.
-- **Pages:** 45 static pages (8 services, 27 service-area town pages within 60 miles of Springfield, garage-sale landing page, quote, about, service areas hub, resources, privacy, thank-you, 404)
+- **Pages:** 46 static pages (8 services, 28 service-area town pages within 60 miles of Springfield, garage-sale landing page, quote, about, service areas hub, resources, privacy, thank-you, 404)
 
 > **Not deployed yet.** Nothing has been published to Netlify. See [Deploying](#deploying-to-netlify).
 
@@ -34,7 +34,7 @@ Node 22.23.4+ is required (Astro 7); `.nvmrc` and Netlify pin Node 24.
 | Tracking IDs (GA4, GTM, Google Ads, Meta, call tracking) | env vars — see `.env.example` |
 | Service page content (8 services) | `src/data/services.ts` |
 | Core city pages (8 hand-written) + region copy | `src/data/cities.ts` |
-| Extended towns (19 more, within 60 miles) | `src/data/areas.ts` |
+| Extended towns (20 more, within 60 miles) | `src/data/areas.ts` |
 | Homepage FAQ | `src/data/faqs.ts` |
 | Before/after projects | `src/data/projects.ts` + photos in `src/assets/projects/` |
 | Customer reviews (component hidden until populated) | `src/data/reviews.ts` |
